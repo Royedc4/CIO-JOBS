@@ -1,0 +1,20 @@
+-- Respaldo en COSER_A
+
+BACKUP DATABASE [ART_A] 
+TO  DISK = N'D:\Dropbox\JointVenture\DB\ART_A.bak' 
+WITH  RETAINDAYS = 1, FORMAT, INIT,  MEDIADESCRIPTION = N'Respaldo ART_A', 
+MEDIANAME = N'ART_A',   NAME = N'ART_A PROFIT DATABASE',
+SKIP, NOREWIND, NOUNLOAD, STATS = 10
+GO
+
+-- Restauracion en SOL_A
+
+RESTORE DATABASE [ART_A] FROM  
+DISK = N'E:\Dropbox\JointVenture\DB\ART_A.bak' 
+WITH  FILE = 1,  
+NOUNLOAD,  REPLACE,  STATS = 10
+ MOVE 'ART_A' TO 
+'C:\Program Files\Microsoft SQL Server\MSSQL11.REFSQL12\MSSQL\DATA\ART_A.mdf', 
+      MOVE 'ART_A_Log' 
+TO 'C:\Program Files\Microsoft SQL Server\MSSQL11.REFSQL12\MSSQL\DATA\ART_A_log.ldf';
+GO
