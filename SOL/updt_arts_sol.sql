@@ -1,3 +1,4 @@
+*************************************************************************
 **********************************************************************************************************
 *** ACTUALIZACION DE ARTICULOS (updt_arts_sol)
 **********************************************************************************************************
@@ -159,19 +160,19 @@ do while !EOF('v_SC')
 			ENDIF
 		ENDIF
 
+
 	*SOLP_A
 		tresult1=sqlexec(tconnect1,'select * from SOLP_A.dbo.art where co_art=?v_SC.co_art','v_resultado')
 		if EOF('v_resultado')
 			
 			ins="INSERT INTO [SOLP_A].[dbo].[art](CO_ART,ART_DES,CO_LIN,CO_CAT,CO_SUBL,CO_COLOR,PROCEDENCI,CO_PROV,UNI_VENTA,"+;
-			" SUNI_VENTA,TIPO,TIPO_IMP,COMENTARIO,cos_merc,prec_vta1,prec_vta2,prec_vta3,prec_vta4,prec_vta5, dis_cen, tipo_cos, campo1, campo2, campo8)"+;
+			" SUNI_VENTA,TIPO,TIPO_IMP,COMENTARIO,PORC_COS,cos_merc,prec_vta1,prec_vta2,prec_vta3,prec_vta4,prec_vta5, dis_cen, tipo_cos, campo1, campo2, campo8)"+;
 			" VALUES (?v_SC.co_art,?v_SC.art_des,?v_SC.co_lin,?v_SC.co_cat,?v_SC.co_subl,?v_SC.co_color,?v_SC.procedenci,"+;
-			"'0000000001',?v_SC.uni_venta,?v_SC.suni_venta,?v_SC.tipo,?v_SC.tipo_imp,?v_SC.comentario,"+;
-			" ?v_SC.cos_merc,"+;
-			"?v_SC.prec_vta1/'1.12', ?v_SC.prec_vta2/'1.12', ?v_SC.prec_vta3/'1.12', ?v_SC.prec_vta4/'1.12', ?v_SC.prec_vta5/'1.12', ?v_SC.dis_cen, ?v_SC.tipo_cos, ?v_SC.campo1, ?v_SC.campo2, ?fechaHora )"
+			"'0000000001',?v_SC.uni_venta,?v_SC.suni_venta,?v_SC.tipo,?v_SC.tipo_imp,?v_SC.comentario,?v_SC.porc_cos,?v_SC.cos_merc,"+;
+			"?v_SC.prec_vta1, ?v_SC.prec_vta2, ?v_SC.prec_vta3, ?v_SC.prec_vta4, ?v_SC.prec_vta5, ?v_SC.dis_cen, ?v_SC.tipo_cos, ?v_SC.campo1, ?v_SC.campo2, ?fechaHora )"
 
 			tresult2=sqlexec(tconnect2,ins)
-			If mensaje_sql(tresult2,1,"SOLP_A Error sql Insertando ART 1, INFORMAR AL DPTO INFORMATICA") <= 0
+			If mensaje_sql(tresult2,1,"Empresa: SOLP_A Error sql Insertando ART, INFORMAR AL DPTO INFORMATICA") <= 0
 				messagebox(v_SC.co_art)
 			   Return .F.
 			else
@@ -184,7 +185,7 @@ skip in v_SC
 enddo
 
 
-InsertResultString="Se han insertado la siguiente cantidad de articulos en las empresas."+Chr(13)+Chr(13)+"ART_A: "+ALLTRIM(STR(con))+Chr(13)+"SOLP_A: "+ALLTRIM(STR(conCOSEP))
+InsertResultString="Se han insertado la siguiente cantidad de articulos en las empresas."+Chr(13)+Chr(13)+"SOL_A: "+ALLTRIM(STR(con))+Chr(13)+"SOLP_A: "+ALLTRIM(STR(conCOSEP))
 Messagebox(InsertResultString,64,"Insercion de Articulos Nuevos")
 
 *************************************************************************
@@ -214,7 +215,7 @@ Messagebox(InsertResultString,64,"Insercion de Articulos Nuevos")
 	"fec_cos_p2=ART_A.fec_cos_p2, cos_merc=ART_A.cos_merc, fec_cos_me=ART_A.fec_cos_me, tipo_cos=ART_A.tipo_cos, dis_cen=ART_A.dis_cen, campo1=ART_A.campo1, campo2=ART_A.campo2 "+;
 	"FROM ART_A.dbo.art "+; 
 	"AS ART_A inner join SOLP_A.dbo.art as SOLP_A on ART_A.co_art=SOLP_A.co_art " +;
-	"WHERE ART_A.stock_act> 0 AND (ART_A.cos_merc > SOLP_A.cos_merc) AND ART_A.prec_vta3>0"
+	"WHERE ART_A.prec_vta3>0"
 
 	tresult3=sqlexec(tconnect3,act)
 	If mensaje_sql(tresult3,1,"Error UPDATE art en SOLP_A!") <= 0
