@@ -117,7 +117,7 @@ DO WHILE !EOF('v_tfac')
 		pre_v=cast(v_tart.prec_vta3 as float(8,2))
 		pre_v=pre_v/1.12
 		cos_pro=cast(costo as float(3,2))
-		this_margen=((pre_v-cos_pro)/pre_v)*100
+		this_margen=(((pre_v-cos_pro)/pre_v)*100)-1
 		
 		*** MessageBox( ALLTRIM(STR(this_margen,8,2)) )
 
