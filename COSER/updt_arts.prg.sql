@@ -209,7 +209,7 @@ do while !EOF('v_SC')
 			"?v_SC.prec_vta1, ?v_SC.prec_vta2, ?v_SC.prec_vta3, ?v_SC.prec_vta4, ?v_SC.prec_vta5, ?v_SC.dis_cen, ?v_SC.tipo_cos, ?v_SC.campo1, ?v_SC.campo2, ?fechaHora )"
 
 			tresult2=sqlexec(tconnect2,ins)
-			If mensaje_sql(tresult2,1,"COSEP_A Error sql Insertando ART 1, INFORMAR AL DPTO INFORMATICA") <= 0
+			If mensaje_sql(tresult2,1,"Empresa: COSEP_A Error sql Insertando ART, INFORMAR AL DPTO INFORMATICA") <= 0
 				messagebox(v_SC.co_art)
 			   Return .F.
 			else
@@ -273,7 +273,7 @@ Messagebox(InsertResultString,64,"Insercion de Articulos Nuevos")
 	"fec_cos_p2=COSER_A.fec_cos_p2, cos_merc=COSER_A.cos_merc, fec_cos_me=COSER_A.fec_cos_me, tipo_cos=COSER_A.tipo_cos, dis_cen=COSER_A.dis_cen, campo1=COSER_A.campo1, campo2=COSER_A.campo2 "+;
 	"FROM COSER_A.dbo.art "+; 
 	"AS COSER_A inner join COSEP_A.dbo.art as COSEP_A on COSER_A.co_art=COSEP_A.co_art " +;
-	"WHERE COSER_A.stock_act> 0 AND (COSER_A.cos_merc > COSEP_A.cos_merc) AND COSER_A.prec_vta3>0"
+	"WHERE COSER_A.prec_vta3>0"
 
 	tresult3=sqlexec(tconnect3,act)
 	If mensaje_sql(tresult3,1,"Error UPDATE art en COSEP_A!") <= 0
