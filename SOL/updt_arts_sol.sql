@@ -208,6 +208,16 @@ Messagebox(InsertResultString,64,"Insercion de Articulos Nuevos")
 		Return .F.
 	ENDIF
 
+	act="update [SOL_A].[DBO].[ART] set art_des=ART_A.art_des, comentario=ART_A.comentario, "+;
+	"campo1=ART_A.campo1, campo2=ART_A.campo2 "+;
+	"FROM ART_A.dbo.art "+; 
+	"AS ART_A inner join SOL_A.dbo.art as SOL_A on ART_A.co_art=SOL_A.co_art "
+
+	tresult4=sqlexec(tconnect4,act)
+	If mensaje_sql(tresult4,1,"Error UPDATE descriptions en SOL_A!") <= 0
+		Return .F.
+	ENDIF
+
 *SOLP_A
 	act="update [SOLP_A].[DBO].[ART] set art_des=ART_A.art_des, comentario=ART_A.comentario, porc_cos=((( (ART_A.prec_vta3/'1.2544')-ART_A.cos_merc)/(ART_A.prec_vta3/'1.2544'))*100 -1), "+;
 	"prec_vta1=ART_A.prec_vta1/'1.12', prec_vta2=ART_A.prec_vta2/'1.12', prec_vta3=ART_A.prec_vta3/'1.12', prec_vta4=ART_A.prec_vta4/'1.12', prec_vta5=ART_A.prec_vta5/'1.12', "+;
@@ -219,6 +229,16 @@ Messagebox(InsertResultString,64,"Insercion de Articulos Nuevos")
 
 	tresult3=sqlexec(tconnect3,act)
 	If mensaje_sql(tresult3,1,"Error UPDATE art en SOLP_A!") <= 0
+		Return .F.
+	ENDIF
+
+	act="update [SOLP_A].[DBO].[ART] set art_des=ART_A.art_des, comentario=ART_A.comentario, "+;
+	"campo1=ART_A.campo1, campo2=ART_A.campo2 "+;
+	"FROM ART_A.dbo.art "+; 
+	"AS ART_A inner join SOLP_A.dbo.art as SOLP_A on ART_A.co_art=SOLP_A.co_art "
+
+	tresult4=sqlexec(tconnect4,act)
+	If mensaje_sql(tresult4,1,"Error UPDATE descriptions en SOLP_A!") <= 0
 		Return .F.
 	ENDIF
 
