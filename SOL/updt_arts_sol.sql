@@ -13,6 +13,8 @@ tconnect = SQLCONECTAR()
 tconnect1 = SQLCONECTAR()
 tconnect2 = SQLCONECTAR()
 tconnect3 = SQLCONECTAR()
+tconnect4 = SQLCONECTAR()
+
 
 *Roy: Getting and formating date and time
 *NOTE: string >> fechaHora && datetime >> convert(datetime,fechaHora,131)
@@ -195,10 +197,10 @@ Messagebox(InsertResultString,64,"Insercion de Articulos Nuevos")
 *La actualizacion para SOL_A se hace siempre y cuando el cos_merc de ART_A > SOL_A y ART_A.stock_act>0
 
 *SOL_A
-	act="update [SOL_A].[DBO].[ART] set art_des=ART_A.art_des, comentario=ART_A.comentario, porc_cos=ART_A.porc_cos, "+;
+	act="update [SOL_A].[DBO].[ART] set porc_cos=ART_A.porc_cos, "+;
 	"prec_vta1=ART_A.prec_vta1, prec_vta2=ART_A.prec_vta2, prec_vta3=ART_A.prec_vta3, prec_vta4=ART_A.prec_vta4, prec_vta5=ART_A.prec_vta5, "+;
 	"fec_prec_v=ART_A.fec_prec_v, fec_prec_2=ART_A.fec_prec_2, fec_prec_3=ART_A.fec_prec_3, fec_prec_4=ART_A.fec_prec_4, fec_prec_5=convert(smalldatetime,?fechaHoy,101), campo8=?fechaHora, " +; 
-	"fec_cos_p2=ART_A.fec_cos_p2, cos_merc=ART_A.cos_merc, fec_cos_me=ART_A.fec_cos_me, tipo_cos=ART_A.tipo_cos, dis_cen=ART_A.dis_cen, campo1=ART_A.campo1, campo2=ART_A.campo2 "+;
+	"fec_cos_p2=ART_A.fec_cos_p2, cos_merc=ART_A.cos_merc, fec_cos_me=ART_A.fec_cos_me, tipo_cos=ART_A.tipo_cos, dis_cen=ART_A.dis_cen "+;
 	"FROM ART_A.dbo.art "+; 
 	"AS ART_A inner join SOL_A.dbo.art as SOL_A on ART_A.co_art=SOL_A.co_art " +;
 	"WHERE ART_A.stock_act> 0 AND (ART_A.cos_merc > SOL_A.cos_merc)"
@@ -219,10 +221,10 @@ Messagebox(InsertResultString,64,"Insercion de Articulos Nuevos")
 	ENDIF
 
 *SOLP_A
-	act="update [SOLP_A].[DBO].[ART] set art_des=ART_A.art_des, comentario=ART_A.comentario, porc_cos=((( (ART_A.prec_vta3/'1.2544')-ART_A.cos_merc)/(ART_A.prec_vta3/'1.2544'))*100 -1), "+;
+	act="update [SOLP_A].[DBO].[ART] set porc_cos=((( (ART_A.prec_vta3/'1.2544')-ART_A.cos_merc)/(ART_A.prec_vta3/'1.2544'))*100 -1), "+;
 	"prec_vta1=ART_A.prec_vta1/'1.12', prec_vta2=ART_A.prec_vta2/'1.12', prec_vta3=ART_A.prec_vta3/'1.12', prec_vta4=ART_A.prec_vta4/'1.12', prec_vta5=ART_A.prec_vta5/'1.12', "+;
 	"fec_prec_v=ART_A.fec_prec_v, fec_prec_2=ART_A.fec_prec_2, fec_prec_3=ART_A.fec_prec_3, fec_prec_4=ART_A.fec_prec_4, fec_prec_5=convert(smalldatetime,?fechaHoy,101), campo8=?fechaHora,  " +; 
-	"fec_cos_p2=ART_A.fec_cos_p2, cos_merc=ART_A.cos_merc, fec_cos_me=ART_A.fec_cos_me, tipo_cos=ART_A.tipo_cos, dis_cen=ART_A.dis_cen, campo1=ART_A.campo1, campo2=ART_A.campo2 "+;
+	"fec_cos_p2=ART_A.fec_cos_p2, cos_merc=ART_A.cos_merc, fec_cos_me=ART_A.fec_cos_me, tipo_cos=ART_A.tipo_cos, dis_cen=ART_A.dis_cen "+;
 	"FROM ART_A.dbo.art "+; 
 	"AS ART_A inner join SOLP_A.dbo.art as SOLP_A on ART_A.co_art=SOLP_A.co_art " +;
 	"WHERE ART_A.prec_vta3>0"
