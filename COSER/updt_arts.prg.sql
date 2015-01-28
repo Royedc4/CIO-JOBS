@@ -23,7 +23,7 @@ fechaHora=DATETIME(YEAR(fechaHoy), MONTH(fechaHoy), DAY(fechaHoy), VAL(LEFT(hora
 *String >> fechaHora y datetime >> convert(datetime,fechaHora,131)
 
 
-If  mensaje_sql(tconnect,0) <= 0
+If  mensaje_sql(tconnect,0) <= 0e
 	Return .F.
 Endif
 If  mensaje_sql(tconnect1,0) <= 0
@@ -257,7 +257,7 @@ Messagebox(InsertResultString,64,"Insercion de Articulos Nuevos")
 *ART_A
 	act="update [ART_A].[DBO].[ART] set porc_cos=COSER_A.porc_cos, "+;
 	"prec_vta1=COSER_A.prec_vta1, prec_vta2=COSER_A.prec_vta2, prec_vta3=COSER_A.prec_vta3, prec_vta4=COSER_A.prec_vta4, prec_vta5=COSER_A.prec_vta5, "+;
-	"fec_prec_v=COSER_A.fec_prec_v, fec_prec_2=COSER_A.fec_prec_2, fec_prec_3=COSER_A.fec_prec_3, fec_prec_4=COSER_A.fec_prec_4, fec_prec_5=convert(smalldatetime,?fechaHoy,101), campo8=?fechaHora, " +; 
+	"fec_prec_v=COSER_A.fec_prec_v, fec_prec_2=COSER_A.fec_prec_2, fec_prec_3=COSER_A.fec_prec_3, fec_prec_4=COSER_A.fec_prec_4, fec_prec_5=convert(smalldatetime,?fechaHoy,101),  " +; 
 	"fec_cos_p2=COSER_A.fec_cos_p2, cos_merc=COSER_A.cos_merc, fec_cos_me=COSER_A.fec_cos_me, tipo_cos=COSER_A.tipo_cos, dis_cen=COSER_A.dis_cen "+;
 	"FROM COSER_A.dbo.art "+; 
 	"AS COSER_A inner join ART_A.dbo.art as ART_A on COSER_A.co_art=ART_A.co_art "
@@ -268,7 +268,7 @@ Messagebox(InsertResultString,64,"Insercion de Articulos Nuevos")
 	ENDIF
 
 	act="update [ART_A].[DBO].[ART] set art_des=COSER_A.art_des, comentario=COSER_A.comentario, "+;
-	"campo1=COSER_A.campo1, campo2=COSER_A.campo2 "+;
+	"campo1=COSER_A.campo1, campo2=COSER_A.campo2, campo8=?fechaHora "+;
 	"FROM COSER_A.dbo.art "+; 
 	"AS COSER_A inner join ART_A.dbo.art as ART_A on COSER_A.co_art=ART_A.co_art "
 
@@ -280,7 +280,7 @@ Messagebox(InsertResultString,64,"Insercion de Articulos Nuevos")
 *COSEP_A
 	act="update [COSEP_A].[DBO].[ART] set porc_cos=((( (COSER_A.prec_vta3/'1.2544')-COSER_A.cos_merc)/(COSER_A.prec_vta3/'1.2544'))*100 -1), "+;
 	"prec_vta1=COSER_A.prec_vta1/'1.12', prec_vta2=COSER_A.prec_vta2/'1.12', prec_vta3=COSER_A.prec_vta3/'1.12', prec_vta4=COSER_A.prec_vta4/'1.12', prec_vta5=COSER_A.prec_vta5/'1.12', "+;
-	"fec_prec_v=COSER_A.fec_prec_v, fec_prec_2=COSER_A.fec_prec_2, fec_prec_3=COSER_A.fec_prec_3, fec_prec_4=COSER_A.fec_prec_4, fec_prec_5=convert(smalldatetime,?fechaHoy,101), campo8=?fechaHora, " +; 
+	"fec_prec_v=COSER_A.fec_prec_v, fec_prec_2=COSER_A.fec_prec_2, fec_prec_3=COSER_A.fec_prec_3, fec_prec_4=COSER_A.fec_prec_4, fec_prec_5=convert(smalldatetime,?fechaHoy,101),  " +; 
 	"fec_cos_p2=COSER_A.fec_cos_p2, cos_merc=COSER_A.cos_merc, fec_cos_me=COSER_A.fec_cos_me, tipo_cos=COSER_A.tipo_cos, dis_cen=COSER_A.dis_cen "+;
 	"FROM COSER_A.dbo.art "+; 
 	"AS COSER_A inner join COSEP_A.dbo.art as COSEP_A on COSER_A.co_art=COSEP_A.co_art " +;
@@ -292,7 +292,7 @@ Messagebox(InsertResultString,64,"Insercion de Articulos Nuevos")
 	ENDIF
 
 	act="update [COSEP_A].[DBO].[ART] set art_des=COSER_A.art_des, comentario=COSER_A.comentario, "+;
-	"campo1=COSER_A.campo1, campo2=COSER_A.campo2 "+;
+	"campo1=COSER_A.campo1, campo2=COSER_A.campo2, campo8=?fechaHora "+;
 	"FROM COSER_A.dbo.art "+; 
 	"AS COSER_A inner join COSEP_A.dbo.art as COSEP_A on COSER_A.co_art=COSEP_A.co_art "
 
@@ -305,7 +305,7 @@ Messagebox(InsertResultString,64,"Insercion de Articulos Nuevos")
 *CONAI_A
 	act="update [CONAI_A].[DBO].[ART] set porc_cos=COSER_A.porc_cos, "+;
 	"prec_vta1=COSER_A.prec_vta1, prec_vta2=COSER_A.prec_vta2, prec_vta3=COSER_A.prec_vta3, prec_vta4=COSER_A.prec_vta4, prec_vta5=COSER_A.prec_vta5, "+;
-	"fec_prec_v=COSER_A.fec_prec_v, fec_prec_2=COSER_A.fec_prec_2, fec_prec_3=COSER_A.fec_prec_3, fec_prec_4=COSER_A.fec_prec_4, fec_prec_5=convert(smalldatetime,?fechaHoy,101), campo8=?fechaHora, " +; 
+	"fec_prec_v=COSER_A.fec_prec_v, fec_prec_2=COSER_A.fec_prec_2, fec_prec_3=COSER_A.fec_prec_3, fec_prec_4=COSER_A.fec_prec_4, fec_prec_5=convert(smalldatetime,?fechaHoy,101), " +; 
 	"fec_cos_p2=COSER_A.fec_cos_p2, cos_merc=COSER_A.cos_merc, fec_cos_me=COSER_A.fec_cos_me, tipo_cos=COSER_A.tipo_cos, dis_cen=COSER_A.dis_cen "+;
 	"FROM COSER_A.dbo.art "+; 
 	"AS COSER_A inner join CONAI_A.dbo.art as CONAI_A on COSER_A.co_art=CONAI_A.co_art " +;
@@ -317,7 +317,7 @@ Messagebox(InsertResultString,64,"Insercion de Articulos Nuevos")
 	ENDIF
 
 	act="update [CONAI_A].[DBO].[ART] set art_des=COSER_A.art_des, comentario=COSER_A.comentario, "+;
-	"campo1=COSER_A.campo1, campo2=COSER_A.campo2 "+;
+	"campo1=COSER_A.campo1, campo2=COSER_A.campo2, campo8=?fechaHora "+;
 	"FROM COSER_A.dbo.art "+; 
 	"AS COSER_A inner join CONAI_A.dbo.art as CONAI_A on COSER_A.co_art=CONAI_A.co_art "
 

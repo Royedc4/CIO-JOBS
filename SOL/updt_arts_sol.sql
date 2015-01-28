@@ -150,7 +150,7 @@ do while !EOF('v_SC')
 			" SUNI_VENTA,TIPO,TIPO_IMP,COMENTARIO,PORC_COS,cos_merc,prec_vta1,prec_vta2,prec_vta3,prec_vta4,prec_vta5, dis_cen, tipo_cos, campo1, campo2, campo8)"+;
 			" VALUES (?v_SC.co_art,?v_SC.art_des,?v_SC.co_lin,?v_SC.co_cat,?v_SC.co_subl,?v_SC.co_color,?v_SC.procedenci,"+;
 			"'0000000001',?v_SC.uni_venta,?v_SC.suni_venta,?v_SC.tipo,?v_SC.tipo_imp,?v_SC.comentario,?v_SC.porc_cos,?v_SC.cos_merc,"+;
-			"?v_SC.prec_vta1, ?v_SC.prec_vta2, ?v_SC.prec_vta3, ?v_SC.prec_vta4, ?v_SC.prec_vta5, ?v_SC.dis_cen, ?v_SC.tipo_cos, ?v_SC.campo1, ?v_SC.campo2, ?fechaHora )"
+			"?v_SC.prec_vta1, ?v_SC.prec_vta2, ?v_SC.prec_vta3, ?v_SC.prec_vta4, ?v_SC.prec_vta5, ?v_SC.dis_cen, ?v_SC.tipo_cos, ?v_SC.campo1, ?v_SC.campo2, ?v_SC.campo8 )"
 
 			tresult2=sqlexec(tconnect2,ins)
 			If mensaje_sql(tresult2,1,"SOL_A Error sql Insertando ART 1, INFORMAR AL DPTO INFORMATICA") <= 0
@@ -171,7 +171,7 @@ do while !EOF('v_SC')
 			" SUNI_VENTA,TIPO,TIPO_IMP,COMENTARIO,PORC_COS,cos_merc,prec_vta1,prec_vta2,prec_vta3,prec_vta4,prec_vta5, dis_cen, tipo_cos, campo1, campo2, campo8)"+;
 			" VALUES (?v_SC.co_art,?v_SC.art_des,?v_SC.co_lin,?v_SC.co_cat,?v_SC.co_subl,?v_SC.co_color,?v_SC.procedenci,"+;
 			"'0000000001',?v_SC.uni_venta,?v_SC.suni_venta,?v_SC.tipo,?v_SC.tipo_imp,?v_SC.comentario,?v_SC.porc_cos,?v_SC.cos_merc,"+;
-			"?v_SC.prec_vta1, ?v_SC.prec_vta2, ?v_SC.prec_vta3, ?v_SC.prec_vta4, ?v_SC.prec_vta5, ?v_SC.dis_cen, ?v_SC.tipo_cos, ?v_SC.campo1, ?v_SC.campo2, ?fechaHora )"
+			"?v_SC.prec_vta1, ?v_SC.prec_vta2, ?v_SC.prec_vta3, ?v_SC.prec_vta4, ?v_SC.prec_vta5, ?v_SC.dis_cen, ?v_SC.tipo_cos, ?v_SC.campo1, ?v_SC.campo2, ?v_SC.campo8 )"
 
 			tresult2=sqlexec(tconnect2,ins)
 			If mensaje_sql(tresult2,1,"Empresa: SOLP_A Error sql Insertando ART, INFORMAR AL DPTO INFORMATICA") <= 0
@@ -199,7 +199,7 @@ Messagebox(InsertResultString,64,"Insercion de Articulos Nuevos")
 *SOL_A
 	act="update [SOL_A].[DBO].[ART] set porc_cos=ART_A.porc_cos, "+;
 	"prec_vta1=ART_A.prec_vta1, prec_vta2=ART_A.prec_vta2, prec_vta3=ART_A.prec_vta3, prec_vta4=ART_A.prec_vta4, prec_vta5=ART_A.prec_vta5, "+;
-	"fec_prec_v=ART_A.fec_prec_v, fec_prec_2=ART_A.fec_prec_2, fec_prec_3=ART_A.fec_prec_3, fec_prec_4=ART_A.fec_prec_4, fec_prec_5=convert(smalldatetime,?fechaHoy,101), campo8=?fechaHora, " +; 
+	"fec_prec_v=ART_A.fec_prec_v, fec_prec_2=ART_A.fec_prec_2, fec_prec_3=ART_A.fec_prec_3, fec_prec_4=ART_A.fec_prec_4, fec_prec_5=convert(smalldatetime,?fechaHoy,101), " +; 
 	"fec_cos_p2=ART_A.fec_cos_p2, cos_merc=ART_A.cos_merc, fec_cos_me=ART_A.fec_cos_me, tipo_cos=ART_A.tipo_cos, dis_cen=ART_A.dis_cen "+;
 	"FROM ART_A.dbo.art "+; 
 	"AS ART_A inner join SOL_A.dbo.art as SOL_A on ART_A.co_art=SOL_A.co_art " +;
@@ -211,7 +211,7 @@ Messagebox(InsertResultString,64,"Insercion de Articulos Nuevos")
 	ENDIF
 
 	act="update [SOL_A].[DBO].[ART] set art_des=ART_A.art_des, comentario=ART_A.comentario, "+;
-	"campo1=ART_A.campo1, campo2=ART_A.campo2 "+;
+	"campo1=ART_A.campo1, campo2=ART_A.campo2, campo7=?fechaHora "+;
 	"FROM ART_A.dbo.art "+; 
 	"AS ART_A inner join SOL_A.dbo.art as SOL_A on ART_A.co_art=SOL_A.co_art "
 
@@ -223,7 +223,7 @@ Messagebox(InsertResultString,64,"Insercion de Articulos Nuevos")
 *SOLP_A
 	act="update [SOLP_A].[DBO].[ART] set porc_cos=((( (ART_A.prec_vta3/'1.2544')-ART_A.cos_merc)/(ART_A.prec_vta3/'1.2544'))*100 -1), "+;
 	"prec_vta1=ART_A.prec_vta1/'1.12', prec_vta2=ART_A.prec_vta2/'1.12', prec_vta3=ART_A.prec_vta3/'1.12', prec_vta4=ART_A.prec_vta4/'1.12', prec_vta5=ART_A.prec_vta5/'1.12', "+;
-	"fec_prec_v=ART_A.fec_prec_v, fec_prec_2=ART_A.fec_prec_2, fec_prec_3=ART_A.fec_prec_3, fec_prec_4=ART_A.fec_prec_4, fec_prec_5=convert(smalldatetime,?fechaHoy,101), campo8=?fechaHora,  " +; 
+	"fec_prec_v=ART_A.fec_prec_v, fec_prec_2=ART_A.fec_prec_2, fec_prec_3=ART_A.fec_prec_3, fec_prec_4=ART_A.fec_prec_4, fec_prec_5=convert(smalldatetime,?fechaHoy,101), " +; 
 	"fec_cos_p2=ART_A.fec_cos_p2, cos_merc=ART_A.cos_merc, fec_cos_me=ART_A.fec_cos_me, tipo_cos=ART_A.tipo_cos, dis_cen=ART_A.dis_cen "+;
 	"FROM ART_A.dbo.art "+; 
 	"AS ART_A inner join SOLP_A.dbo.art as SOLP_A on ART_A.co_art=SOLP_A.co_art " +;
@@ -235,7 +235,7 @@ Messagebox(InsertResultString,64,"Insercion de Articulos Nuevos")
 	ENDIF
 
 	act="update [SOLP_A].[DBO].[ART] set art_des=ART_A.art_des, comentario=ART_A.comentario, "+;
-	"campo1=ART_A.campo1, campo2=ART_A.campo2 "+;
+	"campo1=ART_A.campo1, campo2=ART_A.campo2, campo7=?fechaHora "+;
 	"FROM ART_A.dbo.art "+; 
 	"AS ART_A inner join SOLP_A.dbo.art as SOLP_A on ART_A.co_art=SOLP_A.co_art "
 
