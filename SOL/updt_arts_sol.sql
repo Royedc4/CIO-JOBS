@@ -221,23 +221,23 @@ Messagebox(InsertResultString,64,"Insercion de Articulos Nuevos")
 	ENDIF
 
 *SOLP_A
-	act="update [SOLP_A].[DBO].[ART] set porc_cos=((( (ART_A.prec_vta3/'1.2544')-ART_A.cos_merc)/(ART_A.prec_vta3/'1.2544'))*100 -1), "+;
-	"prec_vta1=ART_A.prec_vta1/'1.12', prec_vta2=ART_A.prec_vta2/'1.12', prec_vta3=ART_A.prec_vta3/'1.12', prec_vta4=ART_A.prec_vta4/'1.12', prec_vta5=ART_A.prec_vta5/'1.12', "+;
-	"fec_prec_v=ART_A.fec_prec_v, fec_prec_2=ART_A.fec_prec_2, fec_prec_3=ART_A.fec_prec_3, fec_prec_4=ART_A.fec_prec_4, fec_prec_5=convert(smalldatetime,?fechaHoy,101), " +; 
-	"fec_cos_p2=ART_A.fec_cos_p2, cos_merc=ART_A.cos_merc, fec_cos_me=ART_A.fec_cos_me, tipo_cos=ART_A.tipo_cos, dis_cen=ART_A.dis_cen, ULT_COS_UN=ART_A.ULT_COS_UN, fec_ult_co=ART_A.fec_ult_co "+;
-	"FROM ART_A.dbo.art "+; 
-	"AS ART_A inner join SOLP_A.dbo.art as SOLP_A on ART_A.co_art=SOLP_A.co_art " +;
-	"WHERE ART_A.prec_vta3>0"
+	act="update [SOLP_A].[DBO].[ART] set porc_cos=((( (SOL_A.prec_vta3/'1.2544')-SOL_A.cos_merc)/(SOL_A.prec_vta3/'1.2544'))*100 -1), "+;
+	"prec_vta1=SOL_A.prec_vta1/'1.12', prec_vta2=SOL_A.prec_vta2/'1.12', prec_vta3=SOL_A.prec_vta3/'1.12', prec_vta4=SOL_A.prec_vta4/'1.12', prec_vta5=SOL_A.prec_vta5/'1.12', "+;
+	"fec_prec_v=SOL_A.fec_prec_v, fec_prec_2=SOL_A.fec_prec_2, fec_prec_3=SOL_A.fec_prec_3, fec_prec_4=SOL_A.fec_prec_4, fec_prec_5=convert(smalldatetime,?fechaHoy,101), " +; 
+	"fec_cos_p2=SOL_A.fec_cos_p2, cos_merc=SOL_A.cos_merc, fec_cos_me=SOL_A.fec_cos_me, tipo_cos=SOL_A.tipo_cos, dis_cen=SOL_A.dis_cen, ULT_COS_UN=SOL_A.ULT_COS_UN, fec_ult_co=SOL_A.fec_ult_co "+;
+	"FROM SOL_A.dbo.art "+; 
+	"AS SOL_A inner join SOLP_A.dbo.art as SOLP_A on SOL_A.co_art=SOLP_A.co_art " +;
+	"WHERE SOL_A.prec_vta3>0"
 
 	tresult3=sqlexec(tconnect3,act)
 	If mensaje_sql(tresult3,1,"Error UPDATE art en SOLP_A!") <= 0
 		Return .F.
 	ENDIF
 
-	act="update [SOLP_A].[DBO].[ART] set art_des=ART_A.art_des, comentario=ART_A.comentario, "+;
-	"campo1=ART_A.campo1, campo2=ART_A.campo2, campo7=?fechaHora, campo8=ART_A.campo8 "+;
-	"FROM ART_A.dbo.art "+; 
-	"AS ART_A inner join SOLP_A.dbo.art as SOLP_A on ART_A.co_art=SOLP_A.co_art "
+	act="update [SOLP_A].[DBO].[ART] set art_des=SOL_A.art_des, comentario=SOL_A.comentario, "+;
+	"campo1=SOL_A.campo1, campo2=SOL_A.campo2, campo7=?fechaHora, campo8=SOL_A.campo8 "+;
+	"FROM SOL_A.dbo.art "+; 
+	"AS SOL_A inner join SOLP_A.dbo.art as SOLP_A on SOL_A.co_art=SOLP_A.co_art "
 
 	tresult4=sqlexec(tconnect4,act)
 	If mensaje_sql(tresult4,1,"Error UPDATE descriptions en SOLP_A!") <= 0
@@ -269,3 +269,7 @@ MESSAGEBOX(":.:Proceso Actualizacion De Precios :.: "+Chr(13)+"--> Completado Ex
 *** LA CONDICION DE PREC_VTA3 en el update NO ES NECESARIA LOGICAMENTE PERO ESTA PARA EVITAR ERRORES DEL PERSONAL DE COSERVICA
 *** Si hay cambios en las descripciones las mismas no se haran sino se cambia un costo y se cumpla la condicion de que el costo sea mayor
 *************************************************************************
+*** Update 10-02-15
+*** SOLP_A se ACTUALIZA DE SOL_A
+*************************************************************************
+
