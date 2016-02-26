@@ -8,7 +8,7 @@
 *** En caso negativo genera un reporte para posterior analisis.
 **********************************************************************************************************
 **********************************************************************************************************
-*** Ultima actualización... Roy Febrero 2016
+*** Ultima actualizacion... Roy Febrero 2016
 **********************************************************************************************************
 
 tconnect = SQLCONECTAR()
@@ -45,7 +45,7 @@ do while !EOF('v_linea')
 			MESSAGEBOX("SOL_A: SE INSERTO UNA NUEVA LINEA: "+Chr(13)+ v_linea.co_lin)
 			ins="INSERT INTO [SOL_A].[dbo].[lin_art] (co_lin,lin_des,campo4) VALUES (?v_linea.co_lin,?v_linea.lin_des,'300')"
 			tresult2=sqlexec(tconnect2,ins)
-			If mensaje_sql(tresult2,1,"Error sql Insertando Datos EN SOL_A, INFORMAR AL DPTO INFORMATICA") <= 0
+			If mensaje_sql(tresult2,1,"Error: 1, INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
 			   Return .F.
 			ENDIF
 		ENDIF
@@ -57,7 +57,7 @@ do while !EOF('v_linea')
 			MESSAGEBOX("SOLP_A: SE INSERTO UNA NUEVA LINEA: "+Chr(13)+ v_linea.co_lin)
 			ins="INSERT INTO [SOLP_A].[dbo].[lin_art] (co_lin,lin_des,campo4) VALUES (?v_linea.co_lin,?v_linea.lin_des,'300')"
 			tresult2=sqlexec(tconnect2,ins)
-			If mensaje_sql(tresult2,1,"Error sql Insertando Datos EN SOLP_A, INFORMAR AL DPTO INFORMATICA") <= 0
+			If mensaje_sql(tresult2,1,"Error: 2, INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
 			   Return .F.
 			ENDIF
 		ENDIF
@@ -79,7 +79,7 @@ do while !EOF('v_sublinea')
 			MESSAGEBOX("SOL_A: SE INSERTO UNA NUEVA SUBLINEA: "+Chr(13)+ v_sublinea.co_subl)
 			ins="INSERT INTO [SOL_A].[dbo].[sub_lin] (co_subl,subl_des,co_lin) VALUES (?v_sublinea.co_subl,?v_sublinea.subl_des,?v_sublinea.co_lin)"
 			tresult2=sqlexec(tconnect2,ins)
-			If mensaje_sql(tresult2,1,"Error sql Insertando Datos EN SOL_A , INFORMAR AL DPTO INFORMATICA") <= 0
+			If mensaje_sql(tresult2,1,"Error: 3, INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
 			 Return .F.
 			ENDIF
 		ENDIF
@@ -90,7 +90,7 @@ do while !EOF('v_sublinea')
 			MESSAGEBOX("SOLP_A: SE INSERTO UNA NUEVA SUBLINEA: "+Chr(13)+ v_sublinea.co_subl)
 			ins="INSERT INTO [SOLP_A].[dbo].[sub_lin] (co_subl,subl_des,co_lin) VALUES (?v_sublinea.co_subl,?v_sublinea.subl_des,?v_sublinea.co_lin)"
 			tresult2=sqlexec(tconnect2,ins)
-			If mensaje_sql(tresult2,1,"Error sql Insertando Datos EN SOLP_A , INFORMAR AL DPTO INFORMATICA") <= 0
+			If mensaje_sql(tresult2,1,"Error: 4, INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
 			 Return .F.
 			ENDIF
 		ENDIF
@@ -113,7 +113,7 @@ do while !EOF('v_cat')
 			MESSAGEBOX("SOL_A: SE INSERTO UNA NUEVA CATEGORIA:" + v_cat.co_cat)
 			ins="INSERT INTO [SOL_A].[dbo].[cat_art] (co_cat,cat_des) VALUES (?v_cat.co_cat,?v_cat.cat_des)"
 			tresult2=sqlexec(tconnect2,ins)
-			If mensaje_sql(tresult2,1,"Error sql Insertando Datos EN SOL_A, INFORMAR AL DPTO INFORMATICA") <= 0
+			If mensaje_sql(tresult2,1,"Error: 5, INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
 			  Return .F.
 			ENDIF
 		ENDIF
@@ -124,7 +124,7 @@ do while !EOF('v_cat')
 			MESSAGEBOX("SOLP_A: SE INSERTO UNA NUEVA CATEGORIA:" + v_cat.co_cat)
 			ins="INSERT INTO [SOLP_A].[dbo].[cat_art] (co_cat,cat_des) VALUES (?v_cat.co_cat,?v_cat.cat_des)"
 			tresult2=sqlexec(tconnect2,ins)
-			If mensaje_sql(tresult2,1,"Error sql Insertando Datos EN SOLP_A, INFORMAR AL DPTO INFORMATICA") <= 0
+			If mensaje_sql(tresult2,1,"Error: 6, INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
 			  Return .F.
 			ENDIF
 		ENDIF
@@ -140,51 +140,69 @@ new_SOL=0
 new_SOLP=0
 updated_SOL=0
 updated_SOLP=0
+reported_code0=0
 reported_code1=0
 reported_code2=0
+roy1=0
+roy2=0
 
 
 * UPDATING ONLY Those with STOCK on CS
 tresult=sqlexec(tconnect,'SELECT * FROM ART_A.dbo.art WHERE stock_act>0','v_CS')
 
-do while !EOF('v_CS')	
+do while !EOF('v_CS')
+	*SOL_A* PASO 1: GUARDAR NUEVO	
+	tresult1=sqlexec(tconnect1,'SELECT * FROM SOL_A.dbo.art WHERE co_art=?v_CS.co_art','v_RS')
+	*IF EXISTS
+	if EOF('v_RS')
+		
+		ins="INSERT INTO [SOL_A].[dbo].[art](CO_ART,ART_DES,CO_LIN,CO_CAT,CO_SUBL,CO_COLOR,PROCEDENCI,CO_PROV,UNI_VENTA,"+;
+		" SUNI_VENTA,TIPO,TIPO_IMP,COMENTARIO,PORC_COS,cos_merc,prec_vta1,prec_vta2,prec_vta3,prec_vta4,prec_vta5, dis_cen, tipo_cos, campo1, campo2, campo8)"+;
+		" VALUES (?v_CS.co_art,?v_CS.art_des,?v_CS.co_lin,?v_CS.co_cat,?v_CS.co_subl,?v_CS.co_color,?v_CS.procedenci,"+;
+		"'0000000001',?v_CS.uni_venta,?v_CS.suni_venta,?v_CS.tipo,?v_CS.tipo_imp,?v_CS.comentario,?v_CS.porc_cos,?v_CS.cos_merc,"+;
+		"?v_CS.prec_vta1, ?v_CS.prec_vta2, ?v_CS.prec_vta3, ?v_CS.prec_vta4, ?v_CS.prec_vta5, ?v_CS.dis_cen, ?v_CS.tipo_cos, ?v_CS.campo1, ?v_CS.campo2, ?v_CS.campo8 )"
 
-	*SOL_A* PASO 1: GUARDAR NUEVO
-		tresult1=sqlexec(tconnect1,'SELECT * FROM SOL_A.dbo.art WHERE co_art=?v_CS.co_art','v_RS')
-		if EOF('v_RS')
-			
-			ins="INSERT INTO [SOL_A].[dbo].[art](CO_ART,ART_DES,CO_LIN,CO_CAT,CO_SUBL,CO_COLOR,PROCEDENCI,CO_PROV,UNI_VENTA,"+;
-			" SUNI_VENTA,TIPO,TIPO_IMP,COMENTARIO,PORC_COS,cos_merc,prec_vta1,prec_vta2,prec_vta3,prec_vta4,prec_vta5, dis_cen, tipo_cos, campo1, campo2, campo8)"+;
-			" VALUES (?v_CS.co_art,?v_CS.art_des,?v_CS.co_lin,?v_CS.co_cat,?v_CS.co_subl,?v_CS.co_color,?v_CS.procedenci,"+;
-			"'0000000001',?v_CS.uni_venta,?v_CS.suni_venta,?v_CS.tipo,?v_CS.tipo_imp,?v_CS.comentario,?v_CS.porc_cos,?v_CS.cos_merc,"+;
-			"?v_CS.prec_vta1, ?v_CS.prec_vta2, ?v_CS.prec_vta3, ?v_CS.prec_vta4, ?v_CS.prec_vta5, ?v_CS.dis_cen, ?v_CS.tipo_cos, ?v_CS.campo1, ?v_CS.campo2, ?v_CS.campo8 )"
-
-			tresult2=sqlexec(tconnect2,ins)
-			If mensaje_sql(tresult2,1,"SOL_A Error sql Insertando ART 1, INFORMAR AL DPTO INFORMATICA") <= 0
-				messagebox(v_CS.co_art)
-			   Return .F.
-			else
-				new_SOL=new_SOL+1
-				*MESSAGEBOX("SOL_A: SE INSERTO UN NUEVO ARTICULO: " + v_CS.co_art)	
-			ENDIF
+		tresult2=sqlexec(tconnect2,ins)
+		If mensaje_sql(tresult2,1,"Error: 7, INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
+			messagebox(v_CS.co_art)
+		   Return .F.
+		else
+			new_SOL=new_SOL+1
+			*MESSAGEBOX("SOL_A: SE INSERTO UN NUEVO ARTICULO: " + v_CS.co_art)	
 		ENDIF
-
-
+	ELSE
 		*SOL_A* PASO 2: ACTUALIZAR
-
-		IF (?v_CS.cos_merc > ?v_RS.cos_merc)
+		IF (v_CS.cos_merc > v_RS.cos_merc)
+			*DEBUG
+			roy1=roy1+1
 			**UPDATE RS=CS**
 			costUpdate_query="UPDATE [SOL_A].[DBO].[ART] SET porc_cos=ART_A.porc_cos, cos_merc=ART_A.cos_merc, fec_cos_me=ART_A.fec_cos_me, tipo_cos=ART_A.tipo_cos, "+;
 			"prec_vta1=ART_A.prec_vta1, prec_vta2=ART_A.prec_vta2, prec_vta3=ART_A.prec_vta3, prec_vta4=ART_A.prec_vta4, prec_vta5=ART_A.prec_vta5, "+;
 			"fec_prec_v=ART_A.fec_prec_v, fec_prec_2=ART_A.fec_prec_2, fec_prec_3=ART_A.fec_prec_3, fec_prec_4=ART_A.fec_prec_4, fec_prec_5=convert(smalldatetime,?fechaHoy,101) " +; 
 			"FROM ART_A.dbo.art AS ART_A inner join SOL_A.dbo.art as SOL_A on ART_A.co_art=SOL_A.co_art " +;
-			"WHERE co_art=?v_RS.co_art"
+			"WHERE SOL_A.co_art=?v_RS.co_art"
 
 			tresult3=sqlexec(tconnect3,costUpdate_query)
-			If mensaje_sql(tresult3,1,"Error: costUpdate_query @ SOL_A!") <= 0
+			If mensaje_sql(tresult3,1,"Error: 8, INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
+				messagebox(v_CS.co_art)
+				*DEBUG
+				InsertResultString="Articulos creados:"+Chr(13)+Chr(13)+"SOL_A: "+ALLTRIM(STR(new_SOL))+Chr(13)+"SOLP_A: "+ALLTRIM(STR(new_SOLP))+Chr(13)+Chr(13)+Chr(13)+"Precios Actualizados:"+Chr(13)+"SOL_A: "+ALLTRIM(STR(updated_SOL))+Chr(13)+"SOLP_A: "+ALLTRIM(STR(updated_SOLP))+Chr(13)+Chr(13)+Chr(13)+"Articulos no actualizados a reportar HOY:"+Chr(13)+"CODIGO_1: "+ALLTRIM(STR(reported_code1))+Chr(13)+"CODIGO_2: "+ALLTRIM(STR(reported_code2))
+				Messagebox(InsertResultString,64,"Resumen Proceso Actualizacion Precios")
+				*+
+				InsertResultString="Debug:"+Chr(13)+Chr(13)+"Roy1: "+ALLTRIM(STR(roy1))+Chr(13)+"roy2: "+ALLTRIM(STR(roy2))
+				Messagebox(InsertResultString,64,"Resumen Proceso Actualizacion Precios")
+				*DEBUG
 				Return .F.
 			else
+				*Saving LOG
 				updated_SOL=updated_SOL+1
+				updatedItems="INSERT INTO [SOL_A].[dbo].[aAa_updt_log](CO_ART,ART_DES,report_code, rs_cos_merc, cs_cos_merc, rs_ult_cos_un, cs_ult_cos_un, rs_prec_vta3, cs_prec_vta3, fecha_reg)"+;
+				" VALUES (?v_CS.co_art,?v_CS.art_des,'0', ?v_RS.cos_merc, ?v_CS.cos_merc, ?v_RS.ULT_COS_UN, ?v_CS.ULT_COS_UN, ?vRS.prec_vta3, ?v_CS.prec_vta3, convert(smalldatetime,?fechaHora,101)) "
+				Code1result=sqlexec(tconnect2,updatedItems)
+				If mensaje_sql(Code1result,1,"Error: 9, INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
+					messagebox(v_CS.co_art)
+					Return .F.
+					ENDIF
 			ENDIF
 
 			**Updating Descriptions annd DATES for their analysis **
@@ -193,44 +211,66 @@ do while !EOF('v_CS')
 			"FROM ART_A.dbo.art AS ART_A inner join SOL_A.dbo.art as SOL_A on ART_A.co_art=SOL_A.co_art "
 
 			tresult4=sqlexec(tconnect4,act)
-			If mensaje_sql(tresult4,1,"Error UPDATE descriptions en SOL_A!") <= 0
+			If mensaje_sql(tresult4,1,"Error: 10, INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
+				messagebox(v_CS.co_art)
 				Return .F.
-			ENDIF
+			ENDIF	
 		ELSE
+			*DEBUG
+			roy2=roy2+1
 			**INFORMING PEOPLE**
-			IF (?v_RS.cos_merc = ?v_RS.ULT_COS_UN)
+			IF (v_RS.cos_merc < v_RS.ULT_COS_UN)
 				**report_code =1**
 				ins="INSERT INTO [SOL_A].[dbo].[aAa_updt_reports](CO_ART,ART_DES,report_code, rs_cos_merc, cs_cos_merc, rs_ult_cos_un, cs_ult_cos_un, fecha_reg)"+;
-				" VALUES (?v_CS.co_art,?v_CS.art_des,'0', ?v_RS.cos_merc, ?v_CS.cos_merc, ?v_RS.ULT_COS_UN, ?v_CS.ULT_COS_UN, convert(smalldatetime,?fechaHoy,101)) "
+				" VALUES (?v_CS.co_art,?v_CS.art_des,'0', ?v_RS.cos_merc, ?v_CS.cos_merc, ?v_RS.ULT_COS_UN, ?v_CS.ULT_COS_UN, convert(smalldatetime,?fechaHora,101)) "
 				Code1result=sqlexec(tconnect2,ins)
-				If mensaje_sql(Code1result,1,"SOL_A Error CODE 1, INFORMAR AL DPTO INFORMATICA") <= 0
+				If mensaje_sql(Code1result,1,"Error: 11, INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
+					messagebox(v_CS.co_art)
+				   Return .F.
+				else
+					reported_code0=reported_code0+1					
+					ENDIF
+			
+			ELSE IF (v_RS.cos_merc = v_RS.ULT_COS_UN)
+				**report_code =1**
+				ins="INSERT INTO [SOL_A].[dbo].[aAa_updt_reports](CO_ART,ART_DES,report_code, rs_cos_merc, cs_cos_merc, rs_ult_cos_un, cs_ult_cos_un, fecha_reg)"+;
+				" VALUES (?v_CS.co_art,?v_CS.art_des,'1', ?v_RS.cos_merc, ?v_CS.cos_merc, ?v_RS.ULT_COS_UN, ?v_CS.ULT_COS_UN, convert(smalldatetime,?fechaHora,101)) "
+				Code1result=sqlexec(tconnect2,ins)
+				If mensaje_sql(Code1result,1,"Error: 11, INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
 					messagebox(v_CS.co_art)
 				   Return .F.
 				else
 					reported_code1=reported_code1+1					
-				ENDIF
-			ENDIF
+					ENDIF
 			
-			IF (?v_RS.cos_merc > ?v_RS.ULT_COS_UN)
+			
+			ELSE IF (v_RS.cos_merc > v_RS.ULT_COS_UN)
 				**report_code =2**
 				ins="INSERT INTO [SOL_A].[dbo].[aAa_updt_reports](CO_ART,ART_DES,report_code, rs_cos_merc, cs_cos_merc, rs_ult_cos_un, cs_ult_cos_un, fecha_reg)"+;
-				" VALUES (?v_CS.co_art,?v_CS.art_des,'1', ?v_RS.cos_merc, ?v_CS.cos_merc, ?v_RS.ULT_COS_UN, ?v_CS.ULT_COS_UN, convert(smalldatetime,?fechaHoy,101)) "
+				" VALUES (?v_CS.co_art,?v_CS.art_des,'2', ?v_RS.cos_merc, ?v_CS.cos_merc, ?v_RS.ULT_COS_UN, ?v_CS.ULT_COS_UN, convert(smalldatetime,?fechaHora,101)) "
 				Code2result=sqlexec(tconnect2,ins)
-				If mensaje_sql(Code2result,1,"SOL_A Error CODE 2, INFORMAR AL DPTO INFORMATICA") <= 0
+				If mensaje_sql(Code2result,1,"Error: 12, INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
 					messagebox(v_CS.co_art)
+					*DEBUG
+					InsertResultString="Articulos creados:"+Chr(13)+Chr(13)+"SOL_A: "+ALLTRIM(STR(new_SOL))+Chr(13)+"SOLP_A: "+ALLTRIM(STR(new_SOLP))+Chr(13)+Chr(13)+Chr(13)+"Precios Actualizados:"+Chr(13)+"SOL_A: "+ALLTRIM(STR(updated_SOL))+Chr(13)+"SOLP_A: "+ALLTRIM(STR(updated_SOLP))+Chr(13)+Chr(13)+Chr(13)+"Articulos no actualizados a reportar HOY:"+Chr(13)+"CODIGO_1: "+ALLTRIM(STR(reported_code1))+Chr(13)+"CODIGO_2: "+ALLTRIM(STR(reported_code2))
+					Messagebox(InsertResultString,64,"Resumen Proceso Actualizacion Precios")
+					*+
+					InsertResultString="Debug:"+Chr(13)+Chr(13)+"Roy1: "+ALLTRIM(STR(roy1))+Chr(13)+"roy2: "+ALLTRIM(STR(roy2))
+					Messagebox(InsertResultString,64,"Resumen Proceso Actualizacion Precios")
+					*DEBUG
 				   Return .F.
 				else
 					reported_code2=reported_code2+1					
+					ENDIF
 				ENDIF
 			ENDIF
 		ENDIF
 
 
 
-
-	*SOLP_A* PASO 1: GUARDAR NUEVO
-		tresult1=sqlexec(tconnect1,'SELECT * FROM SOLP_A.dbo.art WHERE co_art=?v_CS.co_art','v_RS')
-		if EOF('v_RS')
+		*SOLP_A* PASO 1: GUARDAR NUEVO
+		tresult1=sqlexec(tconnect1,'SELECT * FROM SOLP_A.dbo.art WHERE co_art=?v_CS.co_art','v_RSP')
+		if EOF('v_RSP')
 			
 			ins="INSERT INTO [SOLP_A].[dbo].[art](CO_ART,ART_DES,CO_LIN,CO_CAT,CO_SUBL,CO_COLOR,PROCEDENCI,CO_PROV,UNI_VENTA,"+;
 			" SUNI_VENTA,TIPO,TIPO_IMP,COMENTARIO,PORC_COS,cos_merc,prec_vta1,prec_vta2,prec_vta3,prec_vta4,prec_vta5, dis_cen, tipo_cos, campo1, campo2, campo8)"+;
@@ -239,51 +279,54 @@ do while !EOF('v_CS')
 			"?v_CS.prec_vta1, ?v_CS.prec_vta2, ?v_CS.prec_vta3, ?v_CS.prec_vta4, ?v_CS.prec_vta5, ?v_CS.dis_cen, ?v_CS.tipo_cos, ?v_CS.campo1, ?v_CS.campo2, ?v_CS.campo8 )"
 
 			tresult2=sqlexec(tconnect2,ins)
-			If mensaje_sql(tresult2,1,"SOLP_A Error sql Insertando ART 1, INFORMAR AL DPTO INFORMATICA") <= 0
+			If mensaje_sql(tresult2,1,"Error: 13, INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
 				messagebox(v_CS.co_art)
 			   Return .F.
 			else
 				new_SOLP=new_SOLP+1
 				*MESSAGEBOX("SOLP_A: SE INSERTO UN NUEVO ARTICULO: " + v_CS.co_art)	
 			ENDIF
-		ENDIF
+		ELSE
+			*SOLP_A* PASO 2: ACTUALIZAR
+			IF (v_CS.cos_merc > v_RSP.cos_merc)
+				**UPDATE RS=CS**
+				costUpdate_query="UPDATE [SOLP_A].[DBO].[ART] SET porc_cos=((( (SOL_A.prec_vta3/'1.2544')-SOL_A.cos_merc)/(SOL_A.prec_vta3/'1.2544'))*100 -1), "+;
+				"prec_vta1=SOL_A.prec_vta1/'1.12', prec_vta2=SOL_A.prec_vta2/'1.12', prec_vta3=SOL_A.prec_vta3/'1.12', prec_vta4=SOL_A.prec_vta4/'1.12', prec_vta5=SOL_A.prec_vta5/'1.12', "+;
+				"fec_prec_v=SOL_A.fec_prec_v, fec_prec_2=SOL_A.fec_prec_2, fec_prec_3=SOL_A.fec_prec_3, fec_prec_4=SOL_A.fec_prec_4, fec_prec_5=convert(smalldatetime,?fechaHoy,101), " +; 
+				"cos_merc=SOL_A.cos_merc, fec_cos_me=SOL_A.fec_cos_me, tipo_cos=SOL_A.tipo_cos, ULT_COS_UN=SOL_A.ULT_COS_UN, fec_ult_co=SOL_A.fec_ult_co "+;
+				"FROM SOL_A.dbo.art "+; 
+				"AS SOL_A inner join SOLP_A.dbo.art as SOLP_A on SOL_A.co_art=SOLP_A.co_art " +;
+				"WHERE SOL_A.prec_vta3>0 AND co_art=?v_RSP.co_art"
+				*prec_vta3 evading /0 errors
+		
+				tresult3=sqlexec(tconnect3,costUpdate_query)
+				If mensaje_sql(tresult3,1,"Error: 14, INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
+					Return .F.
+				else
+					updated_SOLP=updated_SOLP+1
+				ENDIF
 
+				**Updating Descriptions annd DATES for their analysis **
+				act="UPDATE [SOLP_A].[DBO].[ART] SET art_des=ART_A.art_des, comentario=ART_A.comentario, "+;
+				"campo1=ART_A.campo1, campo2=ART_A.campo2, campo7=?fechaHora, campo8=ART_A.campo8 "+;
+				"FROM ART_A.dbo.art AS ART_A inner join SOLP_A.dbo.art as SOLP_A on ART_A.co_art=SOLP_A.co_art "
 
-		*SOLP_A* PASO 2: ACTUALIZAR
-
-		IF (?v_CS.cos_merc > ?v_RS.cos_merc)
-			**UPDATE RS=CS**
-			costUpdate_query="UPDATE [SOLP_A].[DBO].[ART] SET porc_cos=((( (SOL_A.prec_vta3/'1.2544')-SOL_A.cos_merc)/(SOL_A.prec_vta3/'1.2544'))*100 -1), "+;
-			"prec_vta1=SOL_A.prec_vta1/'1.12', prec_vta2=SOL_A.prec_vta2/'1.12', prec_vta3=SOL_A.prec_vta3/'1.12', prec_vta4=SOL_A.prec_vta4/'1.12', prec_vta5=SOL_A.prec_vta5/'1.12', "+;
-			"fec_prec_v=SOL_A.fec_prec_v, fec_prec_2=SOL_A.fec_prec_2, fec_prec_3=SOL_A.fec_prec_3, fec_prec_4=SOL_A.fec_prec_4, fec_prec_5=convert(smalldatetime,?fechaHoy,101), " +; 
-			"cos_merc=SOL_A.cos_merc, fec_cos_me=SOL_A.fec_cos_me, tipo_cos=SOL_A.tipo_cos, ULT_COS_UN=SOL_A.ULT_COS_UN, fec_ult_co=SOL_A.fec_ult_co "+;
-			"FROM SOL_A.dbo.art "+; 
-			"AS SOL_A inner join SOLP_A.dbo.art as SOLP_A on SOL_A.co_art=SOLP_A.co_art " +;
-			"WHERE SOL_A.prec_vta3>0 AND co_art=?v_RS.co_art"
-			*prec_vta3 evading /0 errors
-	
-			tresult3=sqlexec(tconnect3,costUpdate_query)
-			If mensaje_sql(tresult3,1,"Error: costUpdate_query @ SOLP_A!") <= 0
-				Return .F.
-			else
-				updated_SOLP=updated_SOLP+1
+				tresult4=sqlexec(tconnect4,act)
+				If mensaje_sql(tresult4,1,"Error: 15, INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
+					messagebox(v_CS.co_art)
+					Return .F.
+					ENDIF
+				ENDIF
 			ENDIF
-
-			**Updating Descriptions annd DATES for their analysis **
-			act="UPDATE [SOLP_A].[DBO].[ART] SET art_des=ART_A.art_des, comentario=ART_A.comentario, "+;
-			"campo1=ART_A.campo1, campo2=ART_A.campo2, campo7=?fechaHora, campo8=ART_A.campo8 "+;
-			"FROM ART_A.dbo.art AS ART_A inner join SOLP_A.dbo.art as SOLP_A on ART_A.co_art=SOLP_A.co_art "
-
-			tresult4=sqlexec(tconnect4,act)
-			If mensaje_sql(tresult4,1,"Error UPDATE descriptions SOLP_A!") <= 0
-				Return .F.
-			ENDIF
-
-skip in v_CS
-enddo
+	skip in v_CS
+	enddo
 
 
-InsertResultString="Articulos creados:"+Chr(13)+Chr(13)+"SOL_A: "+ALLTRIM(STR(new_SOL))+Chr(13)+"SOLP_A: "+ALLTRIM(STR(new_SOLP))+Chr(13)+Chr(13)+Chr(13)+"Precios Actualizados:"+Chr(13)+"SOL_A: "+ALLTRIM(STR(updated_SOL))+Chr(13)+"SOLP_A: "+ALLTRIM(STR(updated_SOLP))+Chr(13)+Chr(13)+Chr(13)+"Articulos no actualizados a reportar HOY:"+Chr(13)+"CODIGO_1: "+ALLTRIM(STR(reported_code1))+Chr(13)+"CODIGO_2: "+ALLTRIM(STR(reported_code2))
+InsertResultString="Articulos creados:"+Chr(13)+Chr(13)+"SOL_A: "+ALLTRIM(STR(new_SOL))+Chr(13)+"SOLP_A: "+ALLTRIM(STR(new_SOLP))+Chr(13)+Chr(13)+Chr(13)+"Precios Actualizados:"+Chr(13)+"SOL_A: "+ALLTRIM(STR(updated_SOL))+Chr(13)+"SOLP_A: "+ALLTRIM(STR(updated_SOLP))+Chr(13)+Chr(13)+Chr(13)+"Articulos no actualizados a reportar HOY:"+Chr(13)+"CODIGO_0: "+ALLTRIM(STR(reported_code0))+Chr(13)+"CODIGO_1: "+ALLTRIM(STR(reported_code1))+Chr(13)+"CODIGO_2: "+ALLTRIM(STR(reported_code2))
+Messagebox(InsertResultString,64,"Resumen Proceso Actualizacion Precios")
+
+*DEBUG
+InsertResultString="Debug:"+Chr(13)+Chr(13)+"Roy1: "+ALLTRIM(STR(roy1))+Chr(13)+"roy2: "+ALLTRIM(STR(roy2))
 Messagebox(InsertResultString,64,"Resumen Proceso Actualizacion Precios")
 
 MESSAGEBOX(":.:Proceso Actualizacion De Precios :.: "+Chr(13)+"--> Completado Exitosamente <--" +Chr(13)+"Recuerde notificar al departamento de compras si hubo articulos no actualizados a reportar, recuerde actualizar las tablas locales en las empresas actualizadas.",64,"::Dpto Informatica :) Compresores Servicios::")
@@ -318,8 +361,8 @@ MESSAGEBOX(":.:Proceso Actualizacion De Precios :.: "+Chr(13)+"--> Completado Ex
 *** 02/26/16
 *** La actualizacion para SOLP_A se hace quitando el IVA y tomando en cuenta que el prec_vta3>0 y ART_A.stock_act>
 *** prec_vta3 > 0 para evitar /0
-*** campo7			Actualización Hecha en Refrisol
-*** campo8			Actualización Hecha en Compresores Servicios
-*** fecha_precio5 	Actualización de precio porque CS.cos_merc> RS.cos_merc
+*** campo7			Actualizacion Hecha en Refrisol
+*** campo8			Actualizacion Hecha en Compresores Servicios
+*** fecha_precio5 	Actualizacion de precio porque CS.cos_merc> RS.cos_merc
 *** Questions
 *** y Not UPDATE cs.stock <= 0
