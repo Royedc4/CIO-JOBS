@@ -217,9 +217,9 @@ do while !EOF('v_SC')
 		tresult1=sqlexec(tconnect1,'select * from ART_A.dbo.art where co_art=?v_SC.co_art','v_resultado')
 		if EOF('v_resultado')
 			
-			ins="INSERT INTO [ART_A].[dbo].[art](CO_ART,ART_DES,CO_LIN,CO_CAT,CO_SUBL,CO_COLOR,PROCEDENCI,CO_PROV,UNI_VENTA,"+;
+			ins="INSERT INTO [ART_A].[dbo].[art](STOCK_ACT, CO_ART,ART_DES,CO_LIN,CO_CAT,CO_SUBL,CO_COLOR,PROCEDENCI,CO_PROV,UNI_VENTA,"+;
 			" SUNI_VENTA,TIPO,TIPO_IMP,COMENTARIO,PORC_COS,cos_merc,prec_vta1,prec_vta2,prec_vta3,prec_vta4,prec_vta5, dis_cen, tipo_cos, campo1, campo2, campo8)"+;
-			" VALUES (?v_SC.co_art,?v_SC.art_des,?v_SC.co_lin,?v_SC.co_cat,?v_SC.co_subl,?v_SC.co_color,?v_SC.procedenci,"+;
+			" VALUES (?v_SC.stock_act, ?v_SC.co_art,?v_SC.art_des,?v_SC.co_lin,?v_SC.co_cat,?v_SC.co_subl,?v_SC.co_color,?v_SC.procedenci,"+;
 			"'0000000001',?v_SC.uni_venta,?v_SC.suni_venta,?v_SC.tipo,?v_SC.tipo_imp,?v_SC.comentario,?v_SC.porc_cos,?v_SC.cos_merc,"+;
 			"?v_SC.prec_vta1, ?v_SC.prec_vta2, ?v_SC.prec_vta3, ?v_SC.prec_vta4, ?v_SC.prec_vta5, ?v_SC.dis_cen, ?v_SC.tipo_cos, ?v_SC.campo1,?v_SC.campo2, ?fechaHora )"
 
@@ -409,6 +409,9 @@ Messagebox(InsertResultString,64,"Insercion de Articulos Nuevos")
 
 MESSAGEBOX(":.:Proceso Actualizacion De Precios :.: "+Chr(13)+"--> Completado Exitosamente <--" +Chr(13)+"Recuerde actualizar las Tablas locales en las empresas actualizadas.",64,"::Dpto Informatica :) Compresores Servicios::")
 
+*************************************************************************
+
+*************************************************************************
 *ACTUALIZADO EL 26-05-2014
 *ACTUALIZA TARIBA LLEVANDO TODOS LOS DATOS DE LOS ARTICULOS DE BARRIO OBRERO...
 *ACTUALIZA COSEP_A = QUE TARIBA PERO LE QUITA EL IVA A LOS PRECIOS Y POR SUPUESTO AL MARGEN MINIMO...
@@ -432,4 +435,7 @@ MESSAGEBOX(":.:Proceso Actualizacion De Precios :.: "+Chr(13)+"--> Completado Ex
 *************************************************************************
 *** ACtualizado 20-01-15
 *** Agrega campo2 que sera el codigo antiguo de REfrigeracion El Sol.
+*************************************************************************
+*02/25/16
+*Se Agrega stock_act a ART_A
 *************************************************************************
