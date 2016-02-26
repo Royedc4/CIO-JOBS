@@ -1,10 +1,11 @@
 **********************************************************************************************************
 **********************************************************************************************************
-*** ACTUALIZACION DE ARTICULOS (updt_arts_sol)
+*** ACTUALIZACION DE ARTICULOS EL SOL (updt_arts_sol)
 **********************************************************************************************************
-*** Se alimenta de la base de datos ART_A cada hora para actualizar costos y precios demas datos de articulos.
-*** Actualiza las empresas SOLP_A y SOL_A asegurando la siguiente premisa
+*** Se alimenta de la base de datos ART_A cada hora para actualizar costos precios y demas datos de articulos.
+*** Actualiza las empresas SOLP_A y SOL_A basado en la siguiente premisa
 *** ART_A.ART.COS_MERC > EMPRESAXXX.ART.ULT_COS_UN 
+*** En caso negativo genera un reporte para posterior analisis.
 **********************************************************************************************************
 **********************************************************************************************************
 *** Ultima actualización... Roy Febrero 2016
@@ -133,7 +134,7 @@ skip in v_cat
 enddo
 
 *************************************************************************
-*INSERT DE ARTICULOS*
+*INSERT / UPDATE DE ARTICULOS*
 *************************************************************************
 new_SOL=0
 new_SOLP=0
@@ -148,7 +149,7 @@ tresult=sqlexec(tconnect,'SELECT * FROM ART_A.dbo.art WHERE stock_act>0','v_CS')
 
 do while !EOF('v_CS')	
 
-	*SOL_A PASO 1 GUARDAR NUEVO
+	*SOL_A* PASO 1: GUARDAR NUEVO
 		tresult1=sqlexec(tconnect1,'SELECT * FROM SOL_A.dbo.art WHERE co_art=?v_CS.co_art','v_RS')
 		if EOF('v_RS')
 			
@@ -169,7 +170,7 @@ do while !EOF('v_CS')
 		ENDIF
 
 
-		*SOL_A PASO 2 ACTUALIZAR
+		*SOL_A* PASO 2: ACTUALIZAR
 
 		IF (?v_CS.cos_merc > ?v_RS.cos_merc)
 			**UPDATE RS=CS**
@@ -227,7 +228,7 @@ do while !EOF('v_CS')
 
 
 
-	*SOLP_A PASO 1 GUARDAR NUEVO
+	*SOLP_A* PASO 1: GUARDAR NUEVO
 		tresult1=sqlexec(tconnect1,'SELECT * FROM SOLP_A.dbo.art WHERE co_art=?v_CS.co_art','v_RS')
 		if EOF('v_RS')
 			
@@ -248,7 +249,7 @@ do while !EOF('v_CS')
 		ENDIF
 
 
-		*SOLP_A PASO 2 ACTUALIZAR
+		*SOLP_A* PASO 2: ACTUALIZAR
 
 		IF (?v_CS.cos_merc > ?v_RS.cos_merc)
 			**UPDATE RS=CS**
@@ -282,10 +283,10 @@ skip in v_CS
 enddo
 
 
-InsertResultString="Articulos creados:"+Chr(13)+Chr(13)+"SOL_A: "+ALLTRIM(STR(new_SOL))+Chr(13)+"SOLP_A: "+ALLTRIM(STR(new_SOLP))+Chr(13)+Chr(13)+Chr(13)+"Precios Actualizados:"+Chr(13)+"SOL_A: "+ALLTRIM(STR(updated_SOL))+Chr(13)+"SOLP_A: "+ALLTRIM(STR(updated_SOLP))
+InsertResultString="Articulos creados:"+Chr(13)+Chr(13)+"SOL_A: "+ALLTRIM(STR(new_SOL))+Chr(13)+"SOLP_A: "+ALLTRIM(STR(new_SOLP))+Chr(13)+Chr(13)+Chr(13)+"Precios Actualizados:"+Chr(13)+"SOL_A: "+ALLTRIM(STR(updated_SOL))+Chr(13)+"SOLP_A: "+ALLTRIM(STR(updated_SOLP))+Chr(13)+Chr(13)+Chr(13)+"Articulos no actualizados a reportar HOY:"+Chr(13)+"CODIGO_1: "+ALLTRIM(STR(reported_code1))+Chr(13)+"CODIGO_2: "+ALLTRIM(STR(reported_code2))
 Messagebox(InsertResultString,64,"Resumen Proceso Actualizacion Precios")
 
-MESSAGEBOX(":.:Proceso Actualizacion De Precios :.: "+Chr(13)+"--> Completado Exitosamente <--" +Chr(13)+"Recuerde actualizar las Tablas locales en las empresas actualizadas.",64,"::Dpto Informatica :) Compresores Servicios::")
+MESSAGEBOX(":.:Proceso Actualizacion De Precios :.: "+Chr(13)+"--> Completado Exitosamente <--" +Chr(13)+"Recuerde notificar al departamento de compras si hubo articulos no actualizados a reportar, recuerde actualizar las tablas locales en las empresas actualizadas.",64,"::Dpto Informatica :) Compresores Servicios::")
 
 *************************************************************************
 *** LOG PARA CLIENTE*
