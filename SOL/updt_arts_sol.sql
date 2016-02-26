@@ -139,6 +139,9 @@ new_SOL=0
 new_SOLP=0
 updated_SOL=0
 updated_SOLP=0
+reported_code1=0
+reported_code2=0
+
 
 * UPDATING ONLY Those with STOCK on CS
 tresult=sqlexec(tconnect,'SELECT * FROM ART_A.dbo.art WHERE stock_act>0','v_CS')
@@ -196,14 +199,28 @@ do while !EOF('v_CS')
 			**INFORMING PEOPLE**
 			IF (?v_RS.cos_merc = ?v_RS.ULT_COS_UN)
 				**report_code =1**
-				ins="INSERT INTO [SOL_A].[dbo].[aAa_updt_reports](CO_ART,ART_DES,report_code, rs_cos_merc, cs_cos_merc, rs_ult_cos_un, cs_ult_cos_un)"+;
-				" VALUES (?v_CS.co_art,?v_CS.art_des,'0', ?v_RS.cos_merc, ?v_CS.cos_merc, ?v_RS.ULT_COS_UN, ?v_CS.ULT_COS_UN) "
+				ins="INSERT INTO [SOL_A].[dbo].[aAa_updt_reports](CO_ART,ART_DES,report_code, rs_cos_merc, cs_cos_merc, rs_ult_cos_un, cs_ult_cos_un, fecha_reg)"+;
+				" VALUES (?v_CS.co_art,?v_CS.art_des,'0', ?v_RS.cos_merc, ?v_CS.cos_merc, ?v_RS.ULT_COS_UN, ?v_CS.ULT_COS_UN, convert(smalldatetime,?fechaHoy,101)) "
+				Code1result=sqlexec(tconnect2,ins)
+				If mensaje_sql(Code1result,1,"SOL_A Error CODE 1, INFORMAR AL DPTO INFORMATICA") <= 0
+					messagebox(v_CS.co_art)
+				   Return .F.
+				else
+					reported_code1=reported_code1+1					
+				ENDIF
 			ENDIF
 			
 			IF (?v_RS.cos_merc > ?v_RS.ULT_COS_UN)
 				**report_code =2**
-				ins="INSERT INTO [SOL_A].[dbo].[aAa_updt_reports](CO_ART,ART_DES,report_code, rs_cos_merc, cs_cos_merc, rs_ult_cos_un, cs_ult_cos_un)"+;
-				" VALUES (?v_CS.co_art,?v_CS.art_des,'1', ?v_RS.cos_merc, ?v_CS.cos_merc, ?v_RS.ULT_COS_UN, ?v_CS.ULT_COS_UN) "
+				ins="INSERT INTO [SOL_A].[dbo].[aAa_updt_reports](CO_ART,ART_DES,report_code, rs_cos_merc, cs_cos_merc, rs_ult_cos_un, cs_ult_cos_un, fecha_reg)"+;
+				" VALUES (?v_CS.co_art,?v_CS.art_des,'1', ?v_RS.cos_merc, ?v_CS.cos_merc, ?v_RS.ULT_COS_UN, ?v_CS.ULT_COS_UN, convert(smalldatetime,?fechaHoy,101)) "
+				Code2result=sqlexec(tconnect2,ins)
+				If mensaje_sql(Code2result,1,"SOL_A Error CODE 2, INFORMAR AL DPTO INFORMATICA") <= 0
+					messagebox(v_CS.co_art)
+				   Return .F.
+				else
+					reported_code2=reported_code2+1					
+				ENDIF
 			ENDIF
 		ENDIF
 
