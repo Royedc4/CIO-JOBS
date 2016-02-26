@@ -135,8 +135,10 @@ enddo
 *************************************************************************
 *INSERT DE ARTICULOS*
 *************************************************************************
-con=0
-conCOSEP=0
+new_SOL=0
+new_SOLP=0
+updated_SOL=0
+updated_SOLP=0
 
 * UPDATING ONLY Those with STOCK on CS
 tresult=sqlexec(tconnect,'SELECT * FROM ART_A.dbo.art WHERE stock_act>0','v_CS')
@@ -158,7 +160,7 @@ do while !EOF('v_CS')
 				messagebox(v_CS.co_art)
 			   Return .F.
 			else
-				con=con+1
+				new_SOL=new_SOL+1
 				*MESSAGEBOX("SOL_A: SE INSERTO UN NUEVO ARTICULO: " + v_CS.co_art)	
 			ENDIF
 		ENDIF
@@ -177,6 +179,8 @@ do while !EOF('v_CS')
 			tresult3=sqlexec(tconnect3,costUpdate_query)
 			If mensaje_sql(tresult3,1,"Error: costUpdate_query @ SOL_A!") <= 0
 				Return .F.
+			else
+				updated_SOL=updated_SOL+1
 			ENDIF
 
 			**Updating Descriptions annd DATES for their analysis **
@@ -206,28 +210,28 @@ do while !EOF('v_CS')
 
 
 
-	*SOL_A PASO 1 GUARDAR NUEVO
-		tresult1=sqlexec(tconnect1,'SELECT * FROM SOL_A.dbo.art WHERE co_art=?v_CS.co_art','v_RS')
+	*SOLP_A PASO 1 GUARDAR NUEVO
+		tresult1=sqlexec(tconnect1,'SELECT * FROM SOLP_A.dbo.art WHERE co_art=?v_CS.co_art','v_RS')
 		if EOF('v_RS')
 			
-			ins="INSERT INTO [SOL_A].[dbo].[art](CO_ART,ART_DES,CO_LIN,CO_CAT,CO_SUBL,CO_COLOR,PROCEDENCI,CO_PROV,UNI_VENTA,"+;
+			ins="INSERT INTO [SOLP_A].[dbo].[art](CO_ART,ART_DES,CO_LIN,CO_CAT,CO_SUBL,CO_COLOR,PROCEDENCI,CO_PROV,UNI_VENTA,"+;
 			" SUNI_VENTA,TIPO,TIPO_IMP,COMENTARIO,PORC_COS,cos_merc,prec_vta1,prec_vta2,prec_vta3,prec_vta4,prec_vta5, dis_cen, tipo_cos, campo1, campo2, campo8)"+;
 			" VALUES (?v_CS.co_art,?v_CS.art_des,?v_CS.co_lin,?v_CS.co_cat,?v_CS.co_subl,?v_CS.co_color,?v_CS.procedenci,"+;
 			"'0000000001',?v_CS.uni_venta,?v_CS.suni_venta,?v_CS.tipo,?v_CS.tipo_imp,?v_CS.comentario,?v_CS.porc_cos,?v_CS.cos_merc,"+;
 			"?v_CS.prec_vta1, ?v_CS.prec_vta2, ?v_CS.prec_vta3, ?v_CS.prec_vta4, ?v_CS.prec_vta5, ?v_CS.dis_cen, ?v_CS.tipo_cos, ?v_CS.campo1, ?v_CS.campo2, ?v_CS.campo8 )"
 
 			tresult2=sqlexec(tconnect2,ins)
-			If mensaje_sql(tresult2,1,"SOL_A Error sql Insertando ART 1, INFORMAR AL DPTO INFORMATICA") <= 0
+			If mensaje_sql(tresult2,1,"SOLP_A Error sql Insertando ART 1, INFORMAR AL DPTO INFORMATICA") <= 0
 				messagebox(v_CS.co_art)
 			   Return .F.
 			else
-				con=con+1
-				*MESSAGEBOX("SOL_A: SE INSERTO UN NUEVO ARTICULO: " + v_CS.co_art)	
+				new_SOLP=new_SOLP+1
+				*MESSAGEBOX("SOLP_A: SE INSERTO UN NUEVO ARTICULO: " + v_CS.co_art)	
 			ENDIF
 		ENDIF
 
 
-		*SOL_A PASO 2 ACTUALIZAR
+		*SOLP_A PASO 2 ACTUALIZAR
 
 		IF (?v_CS.cos_merc > ?v_RS.cos_merc)
 			**UPDATE RS=CS**
@@ -241,8 +245,10 @@ do while !EOF('v_CS')
 			*prec_vta3 evading /0 errors
 	
 			tresult3=sqlexec(tconnect3,costUpdate_query)
-			If mensaje_sql(tresult3,1,"Error: costUpdate_query @ SOL_A!") <= 0
+			If mensaje_sql(tresult3,1,"Error: costUpdate_query @ SOLP_A!") <= 0
 				Return .F.
+			else
+				updated_SOLP=updated_SOLP+1
 			ENDIF
 
 			**Updating Descriptions annd DATES for their analysis **
@@ -259,20 +265,19 @@ skip in v_CS
 enddo
 
 
-InsertResultString="Se han insertado la siguiente cantidad de articulos en las empresas."+Chr(13)+Chr(13)+"SOL_A: "+ALLTRIM(STR(con))+Chr(13)+"SOLP_A: "+ALLTRIM(STR(conCOSEP))
-Messagebox(InsertResultString,64,"Insercion de Articulos Nuevos")
-
+InsertResultString="Articulos creados:"+Chr(13)+Chr(13)+"SOL_A: "+ALLTRIM(STR(new_SOL))+Chr(13)+"SOLP_A: "+ALLTRIM(STR(new_SOLP))+Chr(13)+Chr(13)+Chr(13)+"Precios Actualizados:"+Chr(13)+"SOL_A: "+ALLTRIM(STR(updated_SOL))+Chr(13)+"SOLP_A: "+ALLTRIM(STR(updated_SOLP))
+Messagebox(InsertResultString,64,"Resumen Proceso Actualizacion Precios")
 
 MESSAGEBOX(":.:Proceso Actualizacion De Precios :.: "+Chr(13)+"--> Completado Exitosamente <--" +Chr(13)+"Recuerde actualizar las Tablas locales en las empresas actualizadas.",64,"::Dpto Informatica :) Compresores Servicios::")
 
 *************************************************************************
-*LOG PARA CLIENTE*
+*** LOG PARA CLIENTE*
 *************************************************************************
-*ACTUALIZADO EL 26-05-2014
-*ACTUALIZA TARIBA LLEVANDO TODOS LOS DATOS DE LOS ARTICULOS DE BARRIO OBRERO...
-*ACTUALIZA SOLP_A = QUE TARIBA PERO LE QUITA EL IVA A LOS PRECIOS Y POR SUPUESTO AL MARGEN MINIMO...
-*USA CAMPOS 7 Y 8 PARA GUARDAR LA FECHA Y LA HORA DE ACTUALIZACION... TANTO EN SOLP_A COMO EN TARIBA
-*LOS ARTICULOS QUE NO TIENEN PRECIOS... NO SE ACTUALIZAN DE NINGUNA FORMA... POR ELLO PUEDE HABER ARTICULOS QUE NO TENGAN LA FECHA DE ACTUALIZACION...
+*** ACTUALIZADO EL 26-05-2014
+*** ACTUALIZA TARIBA LLEVANDO TODOS LOS DATOS DE LOS ARTICULOS DE BARRIO OBRERO...
+*** ACTUALIZA SOLP_A = QUE TARIBA PERO LE QUITA EL IVA A LOS PRECIOS Y POR SUPUESTO AL MARGEN MINIMO...
+*** USA CAMPOS 7 Y 8 PARA GUARDAR LA FECHA Y LA HORA DE ACTUALIZACION... TANTO EN SOLP_A COMO EN TARIBA
+*** LOS ARTICULOS QUE NO TIENEN PRECIOS... NO SE ACTUALIZAN DE NINGUNA FORMA... POR ELLO PUEDE HABER ARTICULOS QUE NO TENGAN LA FECHA DE ACTUALIZACION...
 *************************************************************************
 *** ACTUALIZADO EL 15-01-15 		*
 *** ACTUALIZA: SOL_A, SOLP_A, SOLP_A, CONAI_A				*
@@ -292,11 +297,11 @@ MESSAGEBOX(":.:Proceso Actualizacion De Precios :.: "+Chr(13)+"--> Completado Ex
 *** UPDATE 10-02-15
 *** SOLP_A se ACTUALIZA DE SOL_A
 *************************************************************************
-*02/26/16
-*La actualizacion para SOLP_A se hace quitando el IVA y tomando en cuenta que el prec_vta3>0 y ART_A.stock_act>
-*prec_vta3 > 0 para evitar /0
-*campo7			Actualización Hecha en Refrisol
-*campo8			Actualización Hecha en Compresores Servicios
-*fecha_precio5 	Actualización de precio porque CS.cos_merc> RS.cos_merc
-*Questions
-*y Not UPDATE cs.stock <= 0
+*** 02/26/16
+*** La actualizacion para SOLP_A se hace quitando el IVA y tomando en cuenta que el prec_vta3>0 y ART_A.stock_act>
+*** prec_vta3 > 0 para evitar /0
+*** campo7			Actualización Hecha en Refrisol
+*** campo8			Actualización Hecha en Compresores Servicios
+*** fecha_precio5 	Actualización de precio porque CS.cos_merc> RS.cos_merc
+*** Questions
+*** y Not UPDATE cs.stock <= 0
