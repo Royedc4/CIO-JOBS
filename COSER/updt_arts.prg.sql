@@ -6,7 +6,7 @@
 *** Actualiza las empresas ART_A CONAI_A y COSEP_A asegurando la siguiente premisa
 *** COSER_A.ART.COS_MERC > EMPRESAXXX.ART.ULT_COS_UN 
 **********************************************************************************************************
-*** Roy Enero 2015
+*** Roy Febrero 2016
 **********************************************************************************************************
 
 
@@ -296,7 +296,7 @@ skip in v_SC
 enddo
 
 
-InsertResultString="Se han insertado la siguiente cantidad de articulos en las empresas."+Chr(13)+Chr(13)+"ART_A: "+ALLTRIM(STR(con))+Chr(13)+"COSEP_A: "+ALLTRIM(STR(conCOSEP))+Chr(13)+"CONAI_A: "+ALLTRIM(STR(conCONAI))+"FRIOS_A: "+ALLTRIM(STR(conFRIOS))
+InsertResultString="Se han insertado la siguiente cantidad de articulos en las empresas."+Chr(13)+Chr(13)+"ART_A: "+ALLTRIM(STR(con))+Chr(13)+"COSEP_A: "+ALLTRIM(STR(conCOSEP))+Chr(13)+"CONAI_A: "+ALLTRIM(STR(conCONAI))+Chr(13)+"FRIOS_A: "+ALLTRIM(STR(conFRIOS))
 Messagebox(InsertResultString,64,"Insercion de Articulos Nuevos")
 
 *************************************************************************
@@ -436,6 +436,6 @@ MESSAGEBOX(":.:Proceso Actualizacion De Precios :.: "+Chr(13)+"--> Completado Ex
 *** ACtualizado 20-01-15
 *** Agrega campo2 que sera el codigo antiguo de REfrigeracion El Sol.
 *************************************************************************
-*02/25/16
-*Se Agrega stock_act a ART_A
+*** 02/25/16
+*** Se Agrega stock_act a ART_A
 *************************************************************************
