@@ -192,8 +192,8 @@ do while !EOF('v_CS')
 			else
 				*Saving LOG
 				updated_SOL=updated_SOL+1
-				updatedItems="INSERT INTO [SOL_A].[dbo].[aAa_updt_log](CO_ART, ART_DES, rs_cos_merc, cs_cos_merc, rs_ult_cos_un, cs_ult_cos_un, rs_prec_vta3, cs_prec_vta3, fecha_reg)"+;
-				" VALUES (?v_CS.co_art, ?v_CS.art_des, ?v_RS.cos_merc, ?v_CS.cos_merc, ?v_RS.ULT_COS_UN, ?v_CS.ULT_COS_UN, ?v_RS.prec_vta3, ?v_CS.prec_vta3, convert(smalldatetime,?fechaHora,101)) "
+				updatedItems="INSERT INTO [SOL_A].[dbo].[aAa_updt_log](CO_ART, ART_DES, rs_stock_act, cs_stock_act, rs_cos_merc, cs_cos_merc, rs_ult_cos_un, cs_ult_cos_un, rs_prec_vta3, cs_prec_vta3, fecha_reg)"+;
+				" VALUES (?v_CS.co_art, ?v_CS.art_des, ?v_RS.stock_act, ?v_CS.stock_act, ?v_RS.cos_merc, ?v_CS.cos_merc, ?v_RS.ULT_COS_UN, ?v_CS.ULT_COS_UN, ?v_RS.prec_vta3, ?v_CS.prec_vta3, convert(smalldatetime,?fechaHora,101)) "
 				Code1result=sqlexec(tconnect2,updatedItems)
 				If mensaje_sql(Code1result,1,"Error: 9, INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
 					messagebox(v_CS.co_art)
@@ -216,8 +216,8 @@ do while !EOF('v_CS')
 			DO CASE
 			CASE (v_RS.cos_merc < v_RS.ULT_COS_UN)
 				**report_code =0**
-				ins="INSERT INTO [SOL_A].[dbo].[aAa_updt_reports](CO_ART,ART_DES,report_code, rs_cos_merc, cs_cos_merc, rs_ult_cos_un, cs_ult_cos_un, fecha_reg)"+;
-				" VALUES (?v_CS.co_art,?v_CS.art_des,'0', ?v_RS.cos_merc, ?v_CS.cos_merc, ?v_RS.ULT_COS_UN, ?v_CS.ULT_COS_UN, convert(smalldatetime,?fechaHora,101)) "
+				ins="INSERT INTO [SOL_A].[dbo].[aAa_updt_reports](CO_ART,ART_DES,report_code, rs_stock_act, cs_stock_act, rs_cos_merc, cs_cos_merc, rs_ult_cos_un, cs_ult_cos_un, fecha_reg)"+;
+				" VALUES (?v_CS.co_art,?v_CS.art_des,'0', ?v_RS.stock_act, ?v_CS.stock_act, ?v_RS.cos_merc, ?v_CS.cos_merc, ?v_RS.ULT_COS_UN, ?v_CS.ULT_COS_UN, convert(smalldatetime,?fechaHora,101)) "
 				Code1result=sqlexec(tconnect2,ins)
 				If mensaje_sql(Code1result,1,"Error: 11, INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
 					messagebox(v_CS.co_art)
@@ -227,8 +227,8 @@ do while !EOF('v_CS')
 					ENDIF
 			CASE (v_RS.cos_merc = v_RS.ULT_COS_UN)
 				**report_code =1**
-				ins="INSERT INTO [SOL_A].[dbo].[aAa_updt_reports](CO_ART,ART_DES,report_code, rs_cos_merc, cs_cos_merc, rs_ult_cos_un, cs_ult_cos_un, fecha_reg)"+;
-				" VALUES (?v_CS.co_art,?v_CS.art_des,'1', ?v_RS.cos_merc, ?v_CS.cos_merc, ?v_RS.ULT_COS_UN, ?v_CS.ULT_COS_UN, convert(smalldatetime,?fechaHora,101)) "
+				ins="INSERT INTO [SOL_A].[dbo].[aAa_updt_reports](CO_ART,ART_DES,report_code, rs_stock_act, cs_stock_act, rs_cos_merc, cs_cos_merc, rs_ult_cos_un, cs_ult_cos_un, fecha_reg)"+;
+				" VALUES (?v_CS.co_art,?v_CS.art_des,'1', ?v_RS.stock_act, ?v_CS.stock_act, ?v_RS.cos_merc, ?v_CS.cos_merc, ?v_RS.ULT_COS_UN, ?v_CS.ULT_COS_UN, convert(smalldatetime,?fechaHora,101)) "
 				Code1result=sqlexec(tconnect2,ins)
 				If mensaje_sql(Code1result,1,"Error: 11, INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
 					messagebox(v_CS.co_art)
@@ -238,8 +238,8 @@ do while !EOF('v_CS')
 					ENDIF
 			OTHERWISE
 				**report_code =2**
-				ins="INSERT INTO [SOL_A].[dbo].[aAa_updt_reports](CO_ART,ART_DES,report_code, rs_cos_merc, cs_cos_merc, rs_ult_cos_un, cs_ult_cos_un, fecha_reg)"+;
-				" VALUES (?v_CS.co_art,?v_CS.art_des,'2', ?v_RS.cos_merc, ?v_CS.cos_merc, ?v_RS.ULT_COS_UN, ?v_CS.ULT_COS_UN, convert(smalldatetime,?fechaHora,101)) "
+				ins="INSERT INTO [SOL_A].[dbo].[aAa_updt_reports](CO_ART,ART_DES,report_code, rs_stock_act, cs_stock_act, rs_cos_merc, cs_cos_merc, rs_ult_cos_un, cs_ult_cos_un, fecha_reg)"+;
+				" VALUES (?v_CS.co_art,?v_CS.art_des,'2', ?v_RS.stock_act, ?v_CS.stock_act, ?v_RS.cos_merc, ?v_CS.cos_merc, ?v_RS.ULT_COS_UN, ?v_CS.ULT_COS_UN, convert(smalldatetime,?fechaHora,101)) "
 				Code2result=sqlexec(tconnect2,ins)
 				If mensaje_sql(Code2result,1,"Error: 12, INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
 					messagebox(v_CS.co_art)
@@ -266,8 +266,8 @@ do while !EOF('v_CS')
 		ins="INSERT INTO [SOLP_A].[dbo].[art](CO_ART,ART_DES,CO_LIN,CO_CAT,CO_SUBL,CO_COLOR,PROCEDENCI,CO_PROV,UNI_VENTA,"+;
 		" SUNI_VENTA,TIPO,TIPO_IMP,COMENTARIO,PORC_COS,cos_merc,prec_vta1,prec_vta2,prec_vta3,prec_vta4,prec_vta5, dis_cen, tipo_cos, campo1, campo2, campo8)"+;
 		" VALUES (?v_CS.co_art,?v_CS.art_des,?v_CS.co_lin,?v_CS.co_cat,?v_CS.co_subl,?v_CS.co_color,?v_CS.procedenci,"+;
-		"'0000000001',?v_CS.uni_venta,?v_CS.suni_venta,?v_CS.tipo,?v_CS.tipo_imp,?v_CS.comentario, ((( (?v_CS.prec_vta3/'1.2544')-?v_CS.cos_merc)/(?v_CS.prec_vta3/'1.2544'))*100 -1) ,?v_CS.cos_merc,"+;
-		"?v_CS.prec_vta1/'1.12', ?v_CS.prec_vta2/'1.12', ?v_CS.prec_vta3/'1.12', ?v_CS.prec_vta4/'1.12', ?v_CS.prec_vta5/'1.12', ?v_CS.dis_cen, ?v_CS.tipo_cos, ?v_CS.campo1, ?v_CS.campo2, ?v_CS.campo8 )"
+		"'0000000001',?v_CS.uni_venta,?v_CS.suni_venta,?v_CS.tipo,?v_CS.tipo_imp,?v_CS.comentario, ((( (?v_CS.prec_vta3/1.2544)-?v_CS.cos_merc)/(?v_CS.prec_vta3/1.2544))*100 -1) ,?v_CS.cos_merc,"+;
+		"?v_CS.prec_vta1/1.12, ?v_CS.prec_vta2/1.12, ?v_CS.prec_vta3/1.12, ?v_CS.prec_vta4/1.12, ?v_CS.prec_vta5/1.12, ?v_CS.dis_cen, ?v_CS.tipo_cos, ?v_CS.campo1, ?v_CS.campo2, ?v_CS.campo8 )"
 
 		tresult2=sqlexec(tconnect2,ins)
 		If mensaje_sql(tresult2,1,"Error: 7, INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
@@ -336,3 +336,8 @@ MESSAGEBOX(":.:Proceso Actualizacion De Precios :.: "+Chr(13)+"--> Completado Ex
 *** fecha_precio5 	Actualizacion de precio porque CS.cos_merc> RS.cos_merc
 *** Questions
 *** y Not UPDATE cs.stock <= 0
+*************************************************************************
+*** 03/11/16
+*** Se añade stock de ambas empresas para todos los el log y report... 
+*** Modificaciones menores de conversiones de string
+*************************************************************************
