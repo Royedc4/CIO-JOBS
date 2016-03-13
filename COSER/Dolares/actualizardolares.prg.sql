@@ -46,7 +46,7 @@ DO WHILE !EOF('v_art')
 	*****actualizandoCosto***** 
 	tresult=sqlexec(tconnect,'select costoDolares,porcNacionalizacion FROM COSER_A.DBO.aAa_artDolares where co_art=?x1_art','v_artDolares')
 	If	(v_artDolares.costoDolares>0)
-		costo=((v_artDolares.porcNacionalizacion/100*v_artDolares.Icosto)+v_artDolares.Icosto)*dolar
+		costo=((v_artDolares.porcNacionalizacion/100*v_artDolares.costoDolares)+v_artDolares.costoDolares)*dolar
 
 		tresult=sqlexec(tconnect,'select mv1,flete,iva from aAa_margenesG where co_subl=?x1_co_subl1','V_SUBLIN')
 		If  mensaje_sql(tresult,1,"Error realizando select") <= 0
@@ -63,14 +63,14 @@ DO WHILE !EOF('v_art')
 			precio1=((costo/flete)/mv1)*iva
 		endif
 
-		******************************************************************************************************
-		*** Updating Art 
-		******************************************************************************************************
+		********************
+		*** Updating Art ***
+		********************
 		sql_con= "update art set " +;
 		"cos_prov=?costo, FEC_COS_P2=?fecha, "+;
 		"prec_vta1=?precio1,  " +;
-		"fec_prec_v=?fecha, " +;
-		" where co_art=?x1_art"
+		"fec_prec_v=?fecha " +;
+		"where co_art=?x1_art"
 
 		tresult=sqlexec(tconnect,sql_con)
 		If mensaje_sql(tresult,1,"Error sql Actualizando Costos y Precios") <= 0
