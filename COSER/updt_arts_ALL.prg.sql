@@ -1,14 +1,11 @@
-**********************************************************************************************************
-*** ACTUALIZACION DE ARTICULOS (updt_arts)
-**********************************************************************************************************
-*** Distribuye los datos de la empresa Matriz (COSER_A) a otras empresas
-*** Con el fin de actualizar costos y precios demas datos de articulos.
-*** Actualiza las empresas ART_A CONAI_A y COSEP_A asegurando la siguiente premisa
-*** COSER_A.ART.COS_MERC > EMPRESAXXX.ART.ULT_COS_UN
-**********************************************************************************************************
-*** Roy Febrero 2016
-**********************************************************************************************************
-
+***********************************************************************************************************
+*** ACTUALIZACION DE ARTICULOS (updt_arts)                                                              ***
+***********************************************************************************************************
+*** Distribuye los datos de la empresa Matriz (COSER_A) a otras empresas                                ***
+*** Con el fin de actualizar costos y precios demas datos de articulos.                                 ***
+*** Actualiza las empresas ART_A CONAI_A y COSEP_A asegurando la siguiente premisa                      ***
+*** COSER_A.ART.COS_MERC > EMPRESAXXX.ART.ULT_COS_UN                                                    ***
+***********************************************************************************************************
 
 tconnect = SQLCONECTAR()
 tconnect1 = SQLCONECTAR()
@@ -35,6 +32,7 @@ MESSAGEBOX(":.:Proceso Actualizacion De Precios :.: "+Chr(13)+"-->  INICIADO <--
 *************************************************************************
 *INSERT DE COLOR*
 *************************************************************************
+
 tresult=sqlexec(tconnect,'select * from COSER_A.dbo.colores','v_color')
 
 
@@ -88,10 +86,10 @@ do while !EOF('v_color')
 skip in v_color
 enddo
 
-
 *************************************************************************
 *INSERT DE LINEA*
 *************************************************************************
+
 tresult=sqlexec(tconnect,'select * from COSER_A.dbo.lin_art','v_linea')
 
 do while !EOF('v_linea')
@@ -143,11 +141,10 @@ do while !EOF('v_linea')
 skip in v_linea
 enddo
 
-
-
 *************************************************************************
 *INSERT DE SUBLINEA*
 *************************************************************************
+
 tresult=sqlexec(tconnect,'select * from COSER_A.dbo.sub_lin','v_sublinea')
 
 do while !EOF('v_sublinea')
@@ -204,8 +201,8 @@ enddo
 *************************************************************************
 *INSERT DE CATEGORIA*
 *************************************************************************
-tresult=sqlexec(tconnect,'select * from COSER_A.dbo.cat_art','v_cat')
 
+tresult=sqlexec(tconnect,'select * from COSER_A.dbo.cat_art','v_cat')
 
 do while !EOF('v_cat')
 	*ART_A
@@ -252,19 +249,17 @@ do while !EOF('v_cat')
 			ENDIF
 		ENDIF
 
-
-
 skip in v_cat
 enddo
 
 *************************************************************************
 *INSERT DE ARTICULOS*
 *************************************************************************
+
 con=0
 conCOSEP=0
 conCONAI=0
 conFRIOS=0
-
 
 tresult=sqlexec(tconnect,'select * from COSER_A.dbo.art','v_SC')
 
@@ -352,13 +347,13 @@ do while !EOF('v_SC')
 skip in v_SC
 enddo
 
-
 InsertResultString="Se han insertado la siguiente cantidad de articulos en las empresas."+Chr(13)+Chr(13)+"ART_A: "+ALLTRIM(STR(con))+Chr(13)+"COSEP_A: "+ALLTRIM(STR(conCOSEP))+Chr(13)+"CONAI_A: "+ALLTRIM(STR(conCONAI))+Chr(13)+"FRIOS_A: "+ALLTRIM(STR(conFRIOS))
 Messagebox(InsertResultString,64,"Insercion de Articulos Nuevos")
 
 *************************************************************************
 *ACTUALIZACION DE ARTICULOS*
 *************************************************************************
+
 *La actualizacion para ART_A es completa... Una replica de COSER_A
 *La actualizacion para COSEP_A se hace quitando el IVA y tomando en cuenta que el prec_vta3>0 y COSER_A.stock_act>0
 *La actualizacion para CONAI_A se hace siempre y cuando el cos_merc de COSER_A > CONAI_A y COSER_A.stock_act>0
@@ -465,34 +460,3 @@ Messagebox(InsertResultString,64,"Insercion de Articulos Nuevos")
 
 
 MESSAGEBOX(":.:Proceso Actualizacion De Precios :.: "+Chr(13)+"--> Completado Exitosamente <--" +Chr(13)+"Recuerde actualizar las Tablas locales en las empresas actualizadas.",64,"::Dpto Informatica :) Compresores Servicios::")
-
-*************************************************************************
-
-*************************************************************************
-*ACTUALIZADO EL 26-05-2014
-*ACTUALIZA TARIBA LLEVANDO TODOS LOS DATOS DE LOS ARTICULOS DE BARRIO OBRERO...
-*ACTUALIZA COSEP_A = QUE TARIBA PERO LE QUITA EL IVA A LOS PRECIOS Y POR SUPUESTO AL MARGEN MINIMO...
-*USA CAMPOS 7 Y 8 PARA GUARDAR LA FECHA Y LA HORA DE ACTUALIZACION... TANTO EN COSEP_A COMO EN TARIBA
-*LOS ARTICULOS QUE NO TIENEN PRECIOS... NO SE ACTUALIZAN DE NINGUNA FORMA... POR ELLO PUEDE HABER ARTICULOS QUE NO TENGAN LA FECHA DE ACTUALIZACION...
-*************************************************************************
-*** ACTUALIZADO EL 15-01-15 		*
-*** ACTUALIZA: SOL_A, SOLP_A, COSEP_A, CONAI_A				*
-*** EL PROCESO CAMBIO DEBIDO A QUE SOL_A Y CONAI_A HACEN COMPRAS ENTONCES	*
-*** ESTA ACTUALIZACION DE DATA SE HACE UNICAMENTE CUANDO  U *
-*** COSER_A.ART.COS_MERC > EMPRESAXXX.ART.ULT_COS_UN *
-*** YA QUE SIEMPRE SE DEBEN MANTENER LOS PRECIOS/COSTOS MAS ALTOS *
-*************************************************************************
-*** Actualizado 18-01-15
-*** Sacamos a SOL Y SOLP y el proceso se divide en 2.
-*** Este que lo ejecuta Wender
-*** Y otro que lo ejecutara Duvin. (muy parecido al que corria JeanCarlos)
-*** Aqui se setean las horas en las cuales el proceso se ejecuto por Wender... esta informacion se repartira a las demas empresas para referencias...
-*** LA CONDICION DE PREC_VTA3 en el update NO ES NECESARIA LOGICAMENTE PERO ESTA PARA EVITAR ERRORES DEL PERSONAL DE COSERVICA
-*** Si hay cambios en las descripciones las mismas no se haran sino se cambia un costo y se cumpla la condicion de que el costo sea mayor
-*************************************************************************
-*** ACtualizado 20-01-15
-*** Agrega campo2 que sera el codigo antiguo de REfrigeracion El Sol.
-*************************************************************************
-*** 02/25/16
-*** Se Agrega stock_act a ART_A
-*************************************************************************
