@@ -210,8 +210,10 @@ do while !EOF('v_CS')
 			If mensaje_sql(tresult4,1,"Error: 10, INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
 				messagebox(v_CS.co_art)
 				Return .F.
-			ENDIF	
-		ELSE
+			ENDIF
+		ENDIF
+
+		IF (v_CS.cos_merc < v_RS.cos_merc)
 			**2.2 INFORMING PEOPLE**
 			DO CASE
 			CASE (v_RS.cos_merc < v_RS.ULT_COS_UN)
