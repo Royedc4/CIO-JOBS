@@ -40,7 +40,7 @@ do while !EOF('v_color')
 	*ART_A
 		tresult1=sqlexec(tconnect1,'select * from ART_A.dbo.colores where co_col=?v_color.co_col','v_resultado')
 		if EOF('v_resultado')
-			MESSAGEBOX("ART_A: SE INSERTO UNA NUEVA CATEGORIA:" + v_color.co_col)
+			MESSAGEBOX("ART_A: SE INSERTO UN NUEVO COLOR:" + v_color.co_col)
 			ins="INSERT INTO [ART_A].[dbo].[colores] (co_col,des_col) VALUES (?v_color.co_col,?v_color.des_col)"
 			tresult2=sqlexec(tconnect2,ins)
 			If mensaje_sql(tresult2,1,"Error sql Insertando Datos EN ART_A, INFORMAR AL DPTO INFORMATICA") <= 0
