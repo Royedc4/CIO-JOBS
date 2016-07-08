@@ -385,7 +385,7 @@ Messagebox(InsertResultString,64,"Insercion de Articulos Nuevos")
 	ENDIF
 
 	*COSEP_A
-	act="update [COSEP_A].[DBO].[ART] set porc_cos=((( (COSER_A.prec_vta3/'1.2544')-COSER_A.cos_merc)/(COSER_A.prec_vta3/'1.2544'))*100 -1), "+;
+	act="update [COSEP_A].[DBO].[ART] set porc_cos=((( (COSER_A.prec_vta3/'1.12')-COSER_A.cos_merc)/(COSER_A.prec_vta3/'1.12'))*100 -1), "+;
 	"prec_vta1=COSER_A.prec_vta1/'1.12', prec_vta2=COSER_A.prec_vta2/'1.12', prec_vta3=COSER_A.prec_vta3/'1.12', prec_vta4=COSER_A.prec_vta4/'1.12', prec_vta5=COSER_A.prec_vta5/'1.12', "+;
 	"fec_prec_v=COSER_A.fec_prec_v, fec_prec_2=COSER_A.fec_prec_2, fec_prec_3=COSER_A.fec_prec_3, fec_prec_4=COSER_A.fec_prec_4, fec_prec_5=convert(smalldatetime,?fechaHoy,101),  " +;
 	"fec_cos_p2=COSER_A.fec_cos_p2, cos_merc=COSER_A.cos_merc, fec_cos_me=COSER_A.fec_cos_me, tipo_cos=COSER_A.tipo_cos, dis_cen=COSER_A.dis_cen, ULT_COS_UN=COSER_A.ULT_COS_UN, fec_ult_co=COSER_A.fec_ult_co "+;

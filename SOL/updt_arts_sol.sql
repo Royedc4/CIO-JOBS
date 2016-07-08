@@ -312,7 +312,7 @@ do while !EOF('v_CS')
 	ELSE
 		*SOLP_A* PASO 2: ACTUALIZAR
 		IF (v_CS.cos_merc > v_RSP.cos_merc)
-			costUpdate_query="update [SOLP_A].[DBO].[ART] set porc_cos=((( (ART_A.prec_vta3/'1.2544')-ART_A.cos_merc)/(ART_A.prec_vta3/'1.2544'))*100 -1), "+;
+			costUpdate_query="update [SOLP_A].[DBO].[ART] set porc_cos=((( (ART_A.prec_vta3/'1.12')-ART_A.cos_merc)/(ART_A.prec_vta3/'1.12'))*100 -1), "+;
 			"prec_vta1=ART_A.prec_vta1/'1.12', prec_vta2=ART_A.prec_vta2/'1.12', prec_vta3=ART_A.prec_vta3/'1.12', prec_vta4=ART_A.prec_vta4/'1.12', prec_vta5=ART_A.prec_vta5/'1.12', "+;
 			"fec_prec_v=ART_A.fec_prec_v, fec_prec_2=ART_A.fec_prec_2, fec_prec_3=ART_A.fec_prec_3, fec_prec_4=ART_A.fec_prec_4, fec_prec_5=convert(smalldatetime,?fechaHoy,101),  " +;
 			"fec_cos_p2=ART_A.fec_cos_p2, cos_merc=ART_A.cos_merc, fec_cos_me=ART_A.fec_cos_me, tipo_cos=ART_A.tipo_cos, dis_cen=ART_A.dis_cen, ULT_COS_UN=ART_A.ULT_COS_UN, fec_ult_co=ART_A.fec_ult_co "+;
