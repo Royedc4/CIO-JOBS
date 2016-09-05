@@ -76,7 +76,7 @@ do while !EOF('v_linea')
 			MESSAGEBOX("SOL_A: SE INSERTO UNA NUEVA LINEA: "+Chr(13)+ v_linea.co_lin)
 			ins="INSERT INTO [SOL_A].[dbo].[lin_art] (co_lin,lin_des,campo4) VALUES (?v_linea.co_lin,?v_linea.lin_des,'300')"
 			tresult2=sqlexec(tconnect2,ins)
-			If mensaje_sql(tresult2,1,"Error 3:, INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
+			If mensaje_sql(tresult2,1,"Error 3: INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
 			   Return .F.
 			ENDIF
 		ENDIF
@@ -165,6 +165,37 @@ skip in v_cat
 enddo
 
 *************************************************************************
+*INSERT DE UNIDADES*
+*************************************************************************
+tresult=sqlexec(tconnect,'SELECT * FROM ART_A.dbo.unidades','v_uni')
+
+do while !EOF('v_uni')
+	*SOL_A
+		tresult1=sqlexec(tconnect1,'SELECT * FROM SOL_A.dbo.unidades WHERE co_uni=?v_uni.co_uni','v_RS')
+		if EOF('v_RS')
+			MESSAGEBOX("SOL_A: SE INSERTO UNA NUEVA UNIDADES:" + v_uni.co_uni)
+			ins="INSERT INTO [SOL_A].[dbo].[unidades] (co_uni, des_uni, co_us_in, fe_us_in, co_us_mo, fe_us_mo, co_us_el, fe_us_el) VALUES (?v_uni.co_uni, ?v_uni.des_uni, ?v_uni.co_us_in, ?v_uni.fe_us_in, ?v_uni.co_us_mo, ?v_uni.fe_us_mo, ?v_uni.co_us_el, ?v_uni.fe_us_el)"
+			tresult2=sqlexec(tconnect2,ins)
+			If mensaje_sql(tresult2,1,"Error 9: INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
+			  Return .F.
+			ENDIF
+		ENDIF
+
+	*SOLP_A
+		tresult1=sqlexec(tconnect1,'SELECT * FROM SOLP_A.dbo.unidades WHERE co_uni=?v_uni.co_uni','v_RS')
+		if EOF('v_RS')
+			MESSAGEBOX("SOLP_A: SE INSERTO UNA NUEVA UNIDADES:" + v_uni.co_uni)
+			ins="INSERT INTO [SOLP_A].[dbo].[unidades](co_uni, des_uni, co_us_in, fe_us_in, co_us_mo, fe_us_mo, co_us_el, fe_us_el) VALUES (?v_uni.co_uni,?v_uni.des_uni,?v_uni.co_us_in,?v_uni.fe_us_in,?v_uni.co_us_mo,?v_uni.fe_us_mo,?v_uni.co_us_el,?v_uni.fe_us_el)"
+			tresult2=sqlexec(tconnect2,ins)
+			If mensaje_sql(tresult2,1,"Error 10: INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
+			  Return .F.
+			ENDIF
+		ENDIF
+
+skip in v_uni
+enddo
+
+*************************************************************************
 *INSERT / UPDATE DE ARTICULOS*
 *************************************************************************
 *********
@@ -195,7 +226,7 @@ do while !EOF('v_CS')
 		"?v_CS.prec_vta1, ?v_CS.prec_vta2, ?v_CS.prec_vta3, ?v_CS.prec_vta4, ?v_CS.prec_vta5, ?v_CS.dis_cen, ?v_CS.tipo_cos, ?v_CS.campo1, ?v_CS.campo2, ?v_CS.campo8 )"
 
 		tresult2=sqlexec(tconnect2,ins)
-		If mensaje_sql(tresult2,1,"Error 9: INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
+		If mensaje_sql(tresult2,1,"Error 11: INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
 			messagebox(v_CS.co_art)
 		   Return .F.
 		else
@@ -213,7 +244,7 @@ do while !EOF('v_CS')
 			"WHERE SOL_A.co_art=?v_RS.co_art"
 
 			tresult3=sqlexec(tconnect3,costUpdate_query)
-			If mensaje_sql(tresult3,1,"Error 10: INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
+			If mensaje_sql(tresult3,1,"Error 12: INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
 				messagebox(v_CS.co_art)
 				*DEBUG
 				InsertResultString="Articulos creados:"+Chr(13)+Chr(13)+"SOL_A: "+ALLTRIM(STR(new_SOL))+Chr(13)+"SOLP_A: "+ALLTRIM(STR(new_SOLP))+Chr(13)+Chr(13)+"Precios Actualizados:"+Chr(13)+"SOL_A: "+ALLTRIM(STR(updated_SOL))+Chr(13)+"SOLP_A: "+ALLTRIM(STR(updated_SOLP))+Chr(13)+Chr(13)+"Articulos no actualizados a reportar HOY:"+Chr(13)+"CODIGO_1: "+ALLTRIM(STR(reported_code1))+Chr(13)+"CODIGO_2: "+ALLTRIM(STR(reported_code2))
@@ -226,7 +257,7 @@ do while !EOF('v_CS')
 				updatedItems="INSERT INTO [SOL_A].[dbo].[aAa_updt_log](CO_ART, ART_DES, rs_stock_act, cs_stock_act, rs_cos_merc, cs_cos_merc, rs_ult_cos_un, cs_ult_cos_un, rs_prec_vta3, cs_prec_vta3, fecha_reg)"+;
 				" VALUES (?v_CS.co_art, ?v_CS.art_des, ?v_RS.stock_act, ?v_CS.stock_act, ?v_RS.cos_merc, ?v_CS.cos_merc, ?v_RS.ULT_COS_UN, ?v_CS.ULT_COS_UN, ?v_RS.prec_vta3, ?v_CS.prec_vta3, convert(smalldatetime,?fechaHora,101)) "
 				Code1result=sqlexec(tconnect2,updatedItems)
-				If mensaje_sql(Code1result,1,"Error 11: 9, INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
+				If mensaje_sql(Code1result,1,"Error 13: INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
 					messagebox(v_CS.co_art)
 					Return .F.
 					ENDIF
@@ -238,7 +269,7 @@ do while !EOF('v_CS')
 			"FROM ART_A.dbo.art AS ART_A inner join SOL_A.dbo.art as SOL_A on ART_A.co_art=SOL_A.co_art "
 
 			tresult4=sqlexec(tconnect4,act)
-			If mensaje_sql(tresult4,1,"Error 12: INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
+			If mensaje_sql(tresult4,1,"Error 14: INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
 				messagebox(v_CS.co_art)
 				Return .F.
 			ENDIF
@@ -252,7 +283,7 @@ do while !EOF('v_CS')
 				ins="INSERT INTO [SOL_A].[dbo].[aAa_updt_reports](CO_ART,ART_DES,report_code, rs_stock_act, cs_stock_act, rs_cos_merc, cs_cos_merc, rs_ult_cos_un, cs_ult_cos_un, fecha_reg)"+;
 				" VALUES (?v_CS.co_art,?v_CS.art_des,'0', ?v_RS.stock_act, ?v_CS.stock_act, ?v_RS.cos_merc, ?v_CS.cos_merc, ?v_RS.ULT_COS_UN, ?v_CS.ULT_COS_UN, convert(smalldatetime,?fechaHora,101)) "
 				Code1result=sqlexec(tconnect2,ins)
-				If mensaje_sql(Code1result,1,"Error 13: INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
+				If mensaje_sql(Code1result,1,"Error 15: INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
 					messagebox(v_CS.co_art)
 				   Return .F.
 				else
@@ -263,7 +294,7 @@ do while !EOF('v_CS')
 				ins="INSERT INTO [SOL_A].[dbo].[aAa_updt_reports](CO_ART,ART_DES,report_code, rs_stock_act, cs_stock_act, rs_cos_merc, cs_cos_merc, rs_ult_cos_un, cs_ult_cos_un, fecha_reg)"+;
 				" VALUES (?v_CS.co_art,?v_CS.art_des,'1', ?v_RS.stock_act, ?v_CS.stock_act, ?v_RS.cos_merc, ?v_CS.cos_merc, ?v_RS.ULT_COS_UN, ?v_CS.ULT_COS_UN, convert(smalldatetime,?fechaHora,101)) "
 				Code1result=sqlexec(tconnect2,ins)
-				If mensaje_sql(Code1result,1,"Error 14: INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
+				If mensaje_sql(Code1result,1,"Error 16: INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
 					messagebox(v_CS.co_art)
 				   Return .F.
 				else
@@ -274,7 +305,7 @@ do while !EOF('v_CS')
 				ins="INSERT INTO [SOL_A].[dbo].[aAa_updt_reports](CO_ART,ART_DES,report_code, rs_stock_act, cs_stock_act, rs_cos_merc, cs_cos_merc, rs_ult_cos_un, cs_ult_cos_un, fecha_reg)"+;
 				" VALUES (?v_CS.co_art,?v_CS.art_des,'2', ?v_RS.stock_act, ?v_CS.stock_act, ?v_RS.cos_merc, ?v_CS.cos_merc, ?v_RS.ULT_COS_UN, ?v_CS.ULT_COS_UN, convert(smalldatetime,?fechaHora,101)) "
 				Code2result=sqlexec(tconnect2,ins)
-				If mensaje_sql(Code2result,1,"Error 15: INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
+				If mensaje_sql(Code2result,1,"Error 17: INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
 					messagebox(v_CS.co_art)
 					*DEBUG
 					InsertResultString="Articulos creados:"+Chr(13)+Chr(13)+"SOL_A: "+ALLTRIM(STR(new_SOL))+Chr(13)+"SOLP_A: "+ALLTRIM(STR(new_SOLP))+Chr(13)+Chr(13)+"Precios Actualizados:"+Chr(13)+"SOL_A: "+ALLTRIM(STR(updated_SOL))+Chr(13)+"SOLP_A: "+ALLTRIM(STR(updated_SOLP))+Chr(13)+Chr(13)+"Articulos no actualizados a reportar HOY:"+Chr(13)+"CODIGO_1: "+ALLTRIM(STR(reported_code1))+Chr(13)+"CODIGO_2: "+ALLTRIM(STR(reported_code2))
@@ -293,7 +324,7 @@ do while !EOF('v_CS')
 	**********
 	*SOLP_A* PASO 1: GUARDAR NUEVO	
 	tresult1=sqlexec(tconnect1,'SELECT * FROM SOLP_A.dbo.art WHERE co_art=?v_CS.co_art','v_RSP')
-*	brow
+
 	*IF EXISTS
 	if EOF('v_RSP')
 		ins="INSERT INTO [SOLP_A].[dbo].[art](CO_ART,ART_DES,CO_LIN,CO_CAT,CO_SUBL,CO_COLOR,PROCEDENCI,CO_PROV,UNI_VENTA,"+;
@@ -303,7 +334,7 @@ do while !EOF('v_CS')
 			"?v_CS.prec_vta1, ?v_CS.prec_vta2, ?v_CS.prec_vta3, ?v_CS.prec_vta4, ?v_CS.prec_vta5, ?v_CS.dis_cen, ?v_CS.tipo_cos, ?v_CS.campo1, ?v_CS.campo2, ?fechaHora )"
 
 		tresult2=sqlexec(tconnect2,ins)
-		If mensaje_sql(tresult2,1,"Error 16: INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
+		If mensaje_sql(tresult2,1,"Error 18: INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
 			messagebox(v_CS.co_art)
 		   Return .F.
 		else
@@ -321,7 +352,7 @@ do while !EOF('v_CS')
 			"WHERE ART_A.prec_vta3>0"
 
 			tresult3=sqlexec(tconnect3,costUpdate_query)
-			If mensaje_sql(tresult3,1,"Error 17: INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
+			If mensaje_sql(tresult3,1,"Error 19: INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
 				messagebox(v_CS.co_art)
 				Return .F.
 				ENDIF
