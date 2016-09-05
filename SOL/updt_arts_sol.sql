@@ -167,14 +167,14 @@ enddo
 *************************************************************************
 *INSERT DE UNIDADES*
 *************************************************************************
-tresult=sqlexec(tconnect,'SELECT * FROM ART_A.dbo.unidades','v_cat')
+tresult=sqlexec(tconnect,'SELECT * FROM ART_A.dbo.unidades','v_uni')
 
-do while !EOF('v_cat')
+do while !EOF('v_uni')
 	*SOL_A
-		tresult1=sqlexec(tconnect1,'SELECT * FROM SOL_A.dbo.unidades WHERE co_cat=?v_cat.co_cat','v_RS')
+		tresult1=sqlexec(tconnect1,'SELECT * FROM SOL_A.dbo.unidades WHERE co_uni=?v_uni.co_uni','v_RS')
 		if EOF('v_RS')
-			MESSAGEBOX("SOL_A: SE INSERTO UNA NUEVA UNIDADES:" + v_cat.co_cat)
-			ins="INSERT INTO [SOL_A].[dbo].[unidades] (co_uni, des_uni, co_us_in, fe_us_in, co_us_mo, fe_us_mo, co_us_el, fe_us_el) VALUES (?v_cat.co_uni, ?v_cat.des_uni, ?v_cat.co_us_in, ?v_cat.fe_us_in, ?v_cat.co_us_mo, ?v_cat.fe_us_mo, ?v_cat.co_us_el, ?v_cat.fe_us_el)"
+			MESSAGEBOX("SOL_A: SE INSERTO UNA NUEVA UNIDADES:" + v_uni.co_uni)
+			ins="INSERT INTO [SOL_A].[dbo].[unidades] (co_uni, des_uni, co_us_in, fe_us_in, co_us_mo, fe_us_mo, co_us_el, fe_us_el) VALUES (?v_uni.co_uni, ?v_uni.des_uni, ?v_uni.co_us_in, ?v_uni.fe_us_in, ?v_uni.co_us_mo, ?v_uni.fe_us_mo, ?v_uni.co_us_el, ?v_uni.fe_us_el)"
 			tresult2=sqlexec(tconnect2,ins)
 			If mensaje_sql(tresult2,1,"Error 9: INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
 			  Return .F.
@@ -182,17 +182,17 @@ do while !EOF('v_cat')
 		ENDIF
 
 	*SOLP_A
-		tresult1=sqlexec(tconnect1,'SELECT * FROM SOLP_A.dbo.unidades WHERE co_cat=?v_cat.co_cat','v_RS')
+		tresult1=sqlexec(tconnect1,'SELECT * FROM SOLP_A.dbo.unidades WHERE co_uni=?v_uni.co_uni','v_RS')
 		if EOF('v_RS')
-			MESSAGEBOX("SOLP_A: SE INSERTO UNA NUEVA UNIDADES:" + v_cat.co_cat)
-			ins="INSERT INTO [SOLP_A].[dbo].[unidades] (co_uni, des_uni, co_us_in, fe_us_in, co_us_mo, fe_us_mo, co_us_el, fe_us_el) VALUES (?v_cat.co_uni, ?v_cat.des_uni, ?v_cat.co_us_in, ?v_cat.fe_us_in, ?v_cat.co_us_mo, ?v_cat.fe_us_mo, ?v_cat.co_us_el, ?v_cat.fe_us_el)"
+			MESSAGEBOX("SOLP_A: SE INSERTO UNA NUEVA UNIDADES:" + v_uni.co_uni)
+			ins="INSERT INTO [SOLP_A].[dbo].[unidades](co_uni, des_uni, co_us_in, fe_us_in, co_us_mo, fe_us_mo, co_us_el, fe_us_el) VALUES (?v_uni.co_uni,?v_uni.des_uni,?v_uni.co_us_in,?v_uni.fe_us_in,?v_uni.co_us_mo,?v_uni.fe_us_mo,?v_uni.co_us_el,?v_uni.fe_us_el)"
 			tresult2=sqlexec(tconnect2,ins)
 			If mensaje_sql(tresult2,1,"Error 10: INFORMAR AL DPTO INFORMATICA sobre el siguiente codigo") <= 0
 			  Return .F.
 			ENDIF
 		ENDIF
 
-skip in v_cat
+skip in v_uni
 enddo
 
 *************************************************************************
